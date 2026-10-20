@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1. Nonrecursive Algorithms — 3AM</title>
+<meta name="description" content="Mathematical analysis of nonrecursive algorithms: the five-step plan, sums, worked examples, the average case, common mistakes, empirical verification.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script defer src="../data/en/glossary.js"></script>
+<script defer src="../data/en/quizzes.js"></script>
+<script defer src="../data/en/tasks-m1.js"></script>
+<script defer src="../assets/quiz.js"></script>
+<script defer src="../assets/viz/common.js"></script>
+<script defer src="../assets/viz/module1.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="module1">
+<div class="layout">
+<nav class="toc" aria-label="Module sections"></nav>
+<main>
+<p class="kicker">Module 1 · Lecture 4 · Levitin, §2.3</p>
+<h1>Analysis of Nonrecursive Algorithms</h1>
+<p class="lead">How to derive an exact formula for the number of operations and the efficiency class from pseudocode with loops.</p>
+
+<h2 id="goals">Goals and learning outcomes</h2>
+<p>The goal of this module is to learn how to turn loops into sums and evaluate them. The fundamentals (input size, basic operation, notations, cases) are covered in the <a href="intro.html">introduction</a>.</p>
+<p>After this module you will be able to:</p>
+<ol>
+<li>apply the five-step general plan of analysis to an algorithm with loops;</li>
+<li>choose the input size and the basic operation with justification;</li>
+<li>express the number of operations as a sum and find its closed-form formula using rules (R1), (R2), (S1), (S2) and the formulas of Appendix A;</li>
+<li>distinguish the worst, best and average cases and derive the average case of sequential search;</li>
+<li>spot six common mistakes in solutions;</li>
+<li>verify a derived formula with a program that counts operations.</li>
+</ol>
+
+<h2 id="plan">The five-step general plan</h2>
+<p>This is the <a data-term="general-plan">general plan for analyzing the time efficiency</a> of nonrecursive algorithms (Levitin, §2.3). Every worked example below follows it strictly.</p>
+<ol class="steps">
+<li><strong>Decide on a parameter indicating the input size.</strong> Without it, the “number of operations” has nothing to be expressed in terms of. <span class="muted">Mistake: taking the value of a number instead of the number of its bits.</span></li>
+<li><strong>Identify the basic operation.</strong> As a rule, it is located in the innermost loop and executed on every iteration of it. <span class="muted">Mistake: choosing an operation under a condition (an assignment inside an if) that is not always executed.</span></li>
+<li><strong>Check whether the number of times it is executed depends only on $n$.</strong> If it also depends on the contents of the input, the worst, average and (if necessary) best cases are investigated separately. <span class="muted">Mistake: overlooking an early exit and writing a single formula “for all cases”.</span></li>
+<li><strong>Set up a sum</strong> expressing the number of times the basic operation is executed: one sum for each loop, with the sum’s limits equal to the loop’s limits. <span class="muted">Mistake: shifting the limits by one.</span></li>
+<li><strong>Find a closed-form formula, or at least the order of growth,</strong> using standard formulas and rules. <span class="muted">Mistake: leaving the answer as a sum or losing a term while simplifying.</span></li>
+</ol>
+<p>At the end of each worked example we state the <a data-term="efficiency-class">efficiency class</a>: the simplest function $g(n)$ such that $C(n) \in \Theta(g(n))$.</p>
+
+<h2 id="sums">Tools: sums</h2>
+<p>A loop for $i \leftarrow l$ to $u$ turns into a sum $\sum_{i=l}^{u}$. To obtain a <a data-term="closed-form">closed-form formula</a>, two rules and a few formulas are enough.</p>
+<h3 id="sum-rules">Two rules</h3>
+$$\sum_{i=l}^{u} c\,a_i = c\sum_{i=l}^{u} a_i \quad\text{(R1)} \qquad\qquad \sum_{i=l}^{u}(a_i \pm b_i) = \sum_{i=l}^{u} a_i \pm \sum_{i=l}^{u} b_i \quad\text{(R2)}$$
+<p>(R1) takes a constant factor outside the sum; (R2) splits a sum into parts. One more rule from Appendix A is splitting at an intermediate limit: $\sum_{i=l}^{u} a_i = \sum_{i=l}^{m} a_i + \sum_{i=m+1}^{u} a_i$.</p>
+<h3 id="sum-formulas">Basic formulas</h3>
+<p><strong>Number of terms.</strong> A sum of ones is the number of values of $i$ from $l$ to $u$ inclusive:</p>
+$$\sum_{i=l}^{u} 1 = u - l + 1 \qquad (l \le u). \quad\text{(S1)}$$
+<p>The “$+1$” is what gets lost most often. A quick check: from 3 to 5 there are three numbers, $5 - 3 + 1 = 3$.</p>
+<p><strong>Arithmetic series:</strong></p>
+$$\sum_{i=1}^{n} i = 1 + 2 + \dots + n = \frac{n(n+1)}{2} \approx \frac12 n^2 \in \Theta(n^2). \quad\text{(S2)}$$
+<p><strong>Sum of squares and of powers:</strong></p>
+$$\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6} \approx \frac13 n^3, \qquad \sum_{i=1}^{n} i^k \approx \frac{1}{k+1}\, n^{k+1} \in \Theta(n^{k+1}).$$
+<p><strong><a data-term="geometric-series">Geometric series</a>:</strong></p>
+$$\sum_{i=0}^{n} a^i = 1 + a + \dots + a^n = \frac{a^{n+1} - 1}{a - 1} \ (a \ne 1), \qquad \sum_{i=0}^{n} 2^i = 2^{n+1} - 1.$$
+<p>The last formula will be needed in Module 2 for the Tower of Hanoi and for counting nodes in a tree of recursive calls.</p>
+<h3 id="sum-example">How to evaluate nested sums</h3>
+<p>A double sum is evaluated from the inside out: first the inner sum for a fixed outer index. Example — the sum that appears below in UniqueElements:</p>
+$$\sum_{i=0}^{n-2}\ \sum_{j=i+1}^{n-1} 1 \overset{(S1)}{=} \sum_{i=0}^{n-2}\big[(n-1) - (i+1) + 1\big] = \sum_{i=0}^{n-2}(n-1-i).$$
+<p>For $i = 0, 1, \dots, n-2$ the terms are $n-1, n-2, \dots, 1$. This is sum (S2) up to $n-1$: $\frac{(n-1)n}{2}$.</p>
+
+<h2 id="max-element">Worked example 1. Largest element: MaxElement</h2>
+<pre class="pseudo">ALGORITHM MaxElement(A[0..n − 1])
+//Determines the value of the largest element in a given array
+//Input: An array A[0..n − 1] of real numbers
+//Output: The value of the largest element in A
+maxval ← A[0]
+for i ← 1 to n − 1 do
+    if A[i] > maxval
+        maxval ← A[i]
+return maxval</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The number of elements $n$.</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">The loop body contains two operations: the comparison $A[i] > \mathit{maxval}$ and the assignment $\mathit{maxval} \leftarrow A[i]$. The comparison is executed on every iteration, the assignment only when a new maximum is found. The basic operation is the <strong>comparison</strong>.</div></div>
+<div><span class="k">3. Cases</span><div class="v">The number of comparisons is the same for all arrays of size $n$, so there is no need to distinguish cases. (The number of assignments does vary: 0 for a decreasing array, $n-1$ for an increasing one. That is exactly why the assignment is not suitable as the basic operation.)</div></div>
+<div><span class="k">4. Sum</span><div class="v">One comparison for each $i$ from $1$ to $n-1$: $C(n) = \sum_{i=1}^{n-1} 1$.</div></div>
+<div><span class="k">5. Solution</span><div class="v">By (S1): $C(n) = (n-1) - 1 + 1 = n - 1$.</div></div>
+<div><span class="k">Class</span><div class="v">$C(n) = n - 1 \in \Theta(n)$.</div></div>
+</div>
+
+<h2 id="unique">Worked example 2. Element uniqueness: UniqueElements</h2>
+<pre class="pseudo">ALGORITHM UniqueElements(A[0..n − 1])
+//Determines whether all the elements in a given array are distinct
+//Input: An array A[0..n − 1]
+//Output: Returns “true” if all the elements in A are distinct and “false” otherwise
+for i ← 0 to n − 2 do
+    for j ← i + 1 to n − 1 do
+        if A[i] = A[j] return false
+return true</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The number of elements $n$.</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">The element comparison $A[i] = A[j]$, the only operation in the innermost loop.</div></div>
+<div><span class="k">3. Cases</span><div class="v">There is an <a data-term="early-exit">early exit</a> (return false), so the number of comparisons depends on the contents of the array. We analyze the worst and best cases separately.</div></div>
+<div><span class="k">4. Sum (worst case)</span><div class="v">The worst case is an input on which the algorithm does not exit early. There are <strong>two kinds</strong> of such inputs:
+<ul><li>arrays with no equal elements;</li><li>arrays in which the only pair of equal elements is in the last two positions, $A[n-2] = A[n-1]$ (it is detected by the very last comparison).</li></ul>
+Then one comparison is made for each $j$ from $i+1$ to $n-1$ and each $i$ from $0$ to $n-2$:
+$$C_{worst}(n) = \sum_{i=0}^{n-2}\sum_{j=i+1}^{n-1} 1.$$</div></div>
+<div><span class="k">5. Solution</span><div class="v">
+$$\begin{aligned} C_{worst}(n) &= \sum_{i=0}^{n-2}(n-1-i) = \sum_{i=0}^{n-2}(n-1) - \sum_{i=0}^{n-2} i \\ &= (n-1)^2 - \frac{(n-2)(n-1)}{2} = \frac{(n-1)n}{2}. \end{aligned}$$
+More briefly: $(n-1) + (n-2) + \dots + 1 = \frac{(n-1)n}{2}$ by (S2). The result is predictable: in the worst case the algorithm has to compare all $\binom{n}{2} = \frac{n(n-1)}{2}$ distinct pairs.</div></div>
+<div><span class="k">Class</span><div class="v">$C_{worst}(n) = \frac{n(n-1)}{2} \approx \frac12 n^2 \in \Theta(n^2)$.</div></div>
+</div>
+<h3 id="unique-best">Best case</h3>
+<p>Levitin analyzes only the worst case; we derive the best case ourselves. For a fixed $n \ge 2$ we look for the input with the fewest comparisons. At least one comparison is always made: the outer loop starts with $i = 0$, the inner one with $j = 1$, and the first comparison $A[0] = A[1]$ is unavoidable. If $A[0] = A[1]$, the algorithm returns false immediately. Hence</p>
+$$C_{best}(n) = 1 \quad \text{on inputs with } A[0] = A[1].$$
+<p>This is not a “small input”: $n$ may be a million, it is enough for the first two elements to coincide. Here the best case says little about practical behavior: for typical arrays without repetitions the algorithm runs in quadratic time.</p>
+<div class="viz" data-viz="pairs">
+<figcaption>Each cell above the diagonal is one comparison $A[i] = A[j]$. The triangle contains $\frac{n(n-1)}{2}$ cells; with the “input A[0] = A[1]” button only one remains.</figcaption>
+</div>
+
+<h2 id="matrix">Worked example 3. Matrix multiplication</h2>
+<p>The product $C = AB$ of two $n\times n$ matrices by definition: $C[i,j] = \sum_{k=0}^{n-1} A[i,k]\,B[k,j]$.</p>
+<pre class="pseudo">ALGORITHM MatrixMultiplication(A[0..n − 1, 0..n − 1], B[0..n − 1, 0..n − 1])
+//Multiplies two square matrices of order n by the definition-based algorithm
+//Input: Two n × n matrices A and B
+//Output: Matrix C = AB
+for i ← 0 to n − 1 do
+    for j ← 0 to n − 1 do
+        C[i, j] ← 0.0
+        for k ← 0 to n − 1 do
+            C[i, j] ← C[i, j] + A[i, k] ∗ B[k, j]
+return C</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The matrix order $n$.</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">The innermost loop contains one multiplication and one addition, executed the same number of times. We do not have to choose between them, but <strong>by tradition</strong> the basic operation is taken to be <strong>multiplication</strong>.</div></div>
+<div><span class="k">3. Cases</span><div class="v">The number of multiplications depends only on $n$.</div></div>
+<div><span class="k">4. Sum</span><div class="v">$M(n) = \sum_{i=0}^{n-1}\sum_{j=0}^{n-1}\sum_{k=0}^{n-1} 1.$</div></div>
+<div><span class="k">5. Solution</span><div class="v">From the inside out by (S1) and (R1): $\sum_{k=0}^{n-1} 1 = n$, then $\sum_{j} n = n^2$, then $\sum_i n^2 = n^3$. Without sums: $n^2$ entries in the result, each a dot product of $n$ multiplications.</div></div>
+<div><span class="k">Class</span><div class="v">$M(n) = n^3 \in \Theta(n^3)$.</div></div>
+</div>
+<p>Running time estimate: $T(n) \approx c_m M(n) = c_m n^3$, where $c_m$ is the time of one multiplication. If we also take the additions into account (there are also $A(n) = n^3$ of them), then</p>
+$$T(n) \approx c_m n^3 + c_a n^3 = (c_m + c_a)\,n^3.$$
+<p>Only the constant changes; the order of growth remains cubic.</p>
+
+<h2 id="dependent">Worked example 4. A loop with a dependent bound</h2>
+<p>In UniqueElements the bound of the inner loop already depended on $i$. Let us analyze a case where it grows faster — a <a data-term="dependent-bound">dependent bound</a> of the form $i^2$:</p>
+<pre class="pseudo">ALGORITHM SquareBound(n)
+x ← 0
+for i ← 1 to n do
+    for j ← 1 to i ∗ i do
+        x ← x + 1
+return x</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The number $n$ itself (here it is simply the number of repetitions; there is no data).</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">The addition $x \leftarrow x + 1$ in the inner loop.</div></div>
+<div><span class="k">3. Cases</span><div class="v">No need to distinguish: there is no early exit.</div></div>
+<div><span class="k">4. Sum</span><div class="v">For a fixed $i$ the inner loop executes $i^2 - 1 + 1 = i^2$ times: $A(n) = \sum_{i=1}^{n}\sum_{j=1}^{i^2} 1 = \sum_{i=1}^{n} i^2.$</div></div>
+<div><span class="k">5. Solution</span><div class="v">$A(n) = \frac{n(n+1)(2n+1)}{6}$. Check: $n = 2$ gives $1 + 4 = 5$, and the formula gives $\frac{2\cdot3\cdot5}{6} = 5$.</div></div>
+<div><span class="k">Class</span><div class="v">$A(n) \approx \frac13 n^3 \in \Theta(n^3)$, by the formula $\sum i^k \in \Theta(n^{k+1})$ with $k = 2$.</div></div>
+</div>
+<p>Rule: if the inner loop depends on $i$, first write the number of its repetitions as a function of $i$ (using $u - l + 1$), and only then sum over $i$.</p>
+
+<h2 id="multiplicative">Worked example 5. A multiplicative loop: Binary</h2>
+<p>In a <a data-term="multiplicative-loop">multiplicative loop</a> the variable is not incremented by one but divided or multiplied. Such a loop passes through only a few values between its bounds, and formula (S1) does not apply.</p>
+<pre class="pseudo">ALGORITHM Binary(n)
+//Input: A positive decimal integer n
+//Output: The number of binary digits in n’s binary representation
+count ← 1
+while n > 1 do
+    count ← count + 1
+    n ← ⌊n/2⌋
+return count</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The number $n$ (its value).</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">The most frequently executed operation is not the loop body but the <strong>comparison $n > 1$</strong>: it is executed one more time than the body (the last check yields “false”).</div></div>
+<div><span class="k">3. Cases</span><div class="v">The number of comparisons is determined by the value of $n$; there is no other input data.</div></div>
+<div><span class="k">4. Count</span><div class="v">Each repetition halves $n$, rounding down ($\lfloor\cdot\rfloor$ is the <a data-term="floor">floor</a>). Hence there are about $\log_2 n$ repetitions. No sum is needed here: we count how many times $n$ can be divided by 2 until 1 remains.</div></div>
+<div><span class="k">5. Solution</span><div class="v">Each division $\lfloor n/2 \rfloor$ drops the last bit of the binary representation. The loop body executes while there is more than one bit, i.e. $b - 1$ times, and there are $b$ comparisons, where $b$ is the number of bits:
+$$C(n) = \lfloor \log_2 n \rfloor + 1.$$
+For example, $n = 100 = 1100100_2$: the values $100, 50, 25, 12, 6, 3, 1$ give 7 comparisons.</div></div>
+<div><span class="k">Class</span><div class="v">$C(n) \in \Theta(\log n)$.</div></div>
+</div>
+<p>The same count holds for a loop with multiplication: with $i \leftarrow 1$; while $i \le n$ do … $i \leftarrow 2i$ the body is executed for $i = 1, 2, 4, \dots, 2^{\lfloor\log_2 n\rfloor}$, i.e. $\lfloor \log_2 n \rfloor + 1$ times.</p>
+<div class="viz" data-viz="doubling">
+<figcaption>The variable $i$ doubles: from 1 to $n$ there are only $\lfloor\log_2 n\rfloor + 1$ stops. Try $n = 1000$: just 10 stops.</figcaption>
+</div>
+<p>If such a loop is placed inside a linear loop, we get $\Theta(n\log n)$:</p>
+<pre class="pseudo">for i ← 1 to n do
+    j ← 1
+    while j ≤ n do
+        x ← x + 1
+        j ← 2 ∗ j</pre>
+<p>The inner loop does not depend on $i$ and always performs $\lfloor\log_2 n\rfloor + 1$ additions, so $A(n) = n\left(\lfloor\log_2 n\rfloor + 1\right) \in \Theta(n\log n)$. But if we start with $j \leftarrow i$, the answer unexpectedly becomes linear — see <a href="#m1-c2">Problem C2</a>. The recursive version of Binary is analyzed in Module 2: <a href="module2.html#binrec">BinRec</a>.</p>
+
+<h2 id="own-diagonal">Own example 1. Sum of the elements above the main diagonal</h2>
+<p>This example appears neither in the lectures nor in Levitin. We need to add up the elements of a square matrix that lie strictly above the main diagonal ($j > i$).</p>
+<pre class="pseudo">ALGORITHM SumAboveDiagonal(A[0..n − 1, 0..n − 1])
+//Sum of the elements A[i, j] with j > i
+s ← 0
+for i ← 0 to n − 2 do
+    for j ← i + 1 to n − 1 do
+        s ← s + A[i, j]
+return s</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The matrix order $n$.</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">The addition $s \leftarrow s + A[i,j]$.</div></div>
+<div><span class="k">3. Cases</span><div class="v">No need to distinguish: the loops go through all values, and the values of the elements affect nothing.</div></div>
+<div><span class="k">4. Sum</span><div class="v">Row $i$ contains the above-diagonal elements with $j = i+1, \dots, n-1$; there are $n - 1 - i$ of them:
+$$A(n) = \sum_{i=0}^{n-2}\sum_{j=i+1}^{n-1} 1 = \sum_{i=0}^{n-2}(n-1-i).$$</div></div>
+<div><span class="k">5. Solution</span><div class="v">The same sum as for UniqueElements: $A(n) = \frac{n(n-1)}{2}$. Check: for $n = 3$ there are 3 elements above the diagonal ($A[0,1], A[0,2], A[1,2]$), and $\frac{3\cdot2}{2} = 3$.</div></div>
+<div><span class="k">Class</span><div class="v">$\Theta(n^2)$ in terms of the order $n$. This is half of the matrix elements, so with respect to the number of elements $N = n^2$ the algorithm is linear: $A \approx N/2$.</div></div>
+</div>
+<p>Conclusion: identical loops give identical sums, even though the problems are different. UniqueElements goes through pairs, while here the cells of a triangle are summed. The only difference is that the early exit is present only in the first algorithm.</p>
+
+<h2 id="own-selection">Own example 2. Selection sort: comparisons versus swaps</h2>
+<p class="muted small">The algorithm itself is given in Levitin, §3.1; here it is analyzed according to the plan of §2.3, with emphasis on the choice of the basic operation: comparisons versus swaps.</p>
+<p>On each pass we find the smallest element among $A[i..n-1]$ and swap it with $A[i]$.</p>
+<pre class="pseudo">ALGORITHM SelectionSort(A[0..n − 1])
+//Sorts an array in nondecreasing order by selecting the minimum
+for i ← 0 to n − 2 do
+    min ← i
+    for j ← i + 1 to n − 1 do
+        if A[j] < A[min]  min ← j
+    swap A[i] and A[min]</pre>
+<div class="plan-walk">
+<div><span class="k">1. Input size</span><div class="v">The number of elements $n$.</div></div>
+<div><span class="k">2. Basic operation</span><div class="v">There are three candidates: the comparison $A[j] < A[\mathit{min}]$, the assignment $\mathit{min} \leftarrow j$ and the swap. The comparison is in the inner loop and always executed; it is the basic operation. The assignment is conditional, and the swap is in the outer loop.</div></div>
+<div><span class="k">3. Cases</span><div class="v">The number of comparisons depends only on $n$: the inner loop is never interrupted. Even on an already sorted array the algorithm makes all the comparisons.</div></div>
+<div><span class="k">4. Sum</span><div class="v">$C(n) = \sum_{i=0}^{n-2}\sum_{j=i+1}^{n-1} 1 = \sum_{i=0}^{n-2}(n-1-i).$</div></div>
+<div><span class="k">5. Solution</span><div class="v">$C(n) = \frac{n(n-1)}{2}$. The number of swaps is exactly $\sum_{i=0}^{n-2} 1 = n - 1$.</div></div>
+<div><span class="k">Class</span><div class="v">$\Theta(n^2)$ in comparisons, $\Theta(n)$ in swaps.</div></div>
+</div>
+<p>Conclusion: the choice of the basic operation depends on what is expensive. If the elements are large records that are costly to move, the linear number of swaps is the main advantage of selection sort. Still, the running time is determined by the $\Theta(n^2)$ comparisons.</p>
+
+<h2 id="average">Average case: sequential search</h2>
+<p>For sequential search (the pseudocode is in the <a href="intro.html#cases">introduction</a>) $C_{worst}(n) = n$ and $C_{best}(n) = 1$. To find the <a data-term="average-case">average case</a>, we need explicit assumptions about the inputs. Levitin makes <strong>two standard assumptions</strong>:</p>
+<ol>
+<li>(a) the probability of a successful search is equal to $p$ ($0 \le p \le 1$);</li>
+<li>(b) in a successful search, the probability of the first match occurring in any of the $n$ positions is the same.</li>
+</ol>
+<p>Let us partition all inputs into classes with the same number of comparisons:</p>
+<ul>
+<li>first match in position $i$ ($i = 1, \dots, n$): exactly $i$ comparisons, probability $\frac{p}{n}$;</li>
+<li>the key is absent: $n$ comparisons, probability $1 - p$.</li>
+</ul>
+<p>The expected value:</p>
+$$C_{avg}(n) = \left[1\cdot\frac pn + 2\cdot\frac pn + \dots + n\cdot\frac pn\right] + n(1-p) = \frac pn\cdot\frac{n(n+1)}{2} + n(1-p) = \frac{p(n+1)}{2} + n(1-p).$$
+<p>Two checks at the extreme values:</p>
+<ul>
+<li>$p = 1$ (the key is certainly present): $C_{avg} = \frac{n+1}{2}$ — on average, half of the array is inspected;</li>
+<li>$p = 0$ (the key is certainly absent): $C_{avg} = n$ — all the elements are inspected.</li>
+</ul>
+<p>The average case cannot be obtained as the mean of the worst and best cases: $C_{avg}(n)$ coincides with $\frac{1+n}{2}$ only when $p = 1$ (or $n = 1$), and equals $n$ when $p = 0$. Assumptions (a) and (b) are convenient but hard to verify on real data. If the position probabilities are different, the answer changes — see <a href="#m1-c1">Problem C1</a>.</p>
+<div class="viz" data-viz="seqsearch">
+<figcaption>Each run draws an input according to assumptions (a) and (b). The histogram shows how many times each number of comparisons occurred; the experimental mean approaches the formula.</figcaption>
+</div>
+
+<h2 id="mistakes">Common mistakes</h2>
+<h3 id="mistake-basic-op">The wrong basic operation</h3>
+<p>The chosen operation is not executed on every iteration (the assignment under the if in MaxElement), or it is a loop-control operation. Check: is the chosen operation executed on every step of the innermost loop for any input? <a href="#m1-a1">Problem A1</a>.</p>
+<h3 id="mistake-size">Size versus value</h3>
+<p>If the input is a single number $n$, its size is the number of bits $b \approx \log_2 n$. An algorithm with $\Theta(n)$ or $\Theta(\sqrt n)$ operations is exponential in $b$. <a href="#m1-f2">Problem F2</a>.</p>
+<h3 id="mistake-cases">Confusing the cases</h3>
+<p>The best case is not a small input. The average case is not the mean of the worst and best cases. The worst case is not “the largest array” but the most unfavorable contents for a given $n$. <a href="#m1-b3">Problem B3</a>.</p>
+<h3 id="mistake-off-by-one">Off-by-one error</h3>
+<p>An <a data-term="off-by-one">off-by-one error</a> is $u - l$ instead of $u - l + 1$, or $n - i$ instead of $n - 1 - i$. The order of growth usually does not change, but the exact formula is wrong, and a counter in a program will refute it. The best protection is to check the formula for $n = 1, 2, 3$. <a href="#m1-f1">Problem F1</a>.</p>
+<h3 id="mistake-early-exit">Early exit</h3>
+<p>A return inside a loop or a compound while condition makes the number of operations depend on the input. You need to describe an input on which no exit happens (the worst case) and one on which it happens immediately (the best case). <a href="#unique">UniqueElements</a>.</p>
+<h3 id="mistake-hidden">Hidden cost</h3>
+<p><a data-term="hidden-cost">Hidden cost</a>: a single line of pseudocode or code may be a loop. The check <code>if x in lst</code> in Python is a sequential search ($\Theta(n)$), the slice <code>A[1:]</code> copies the array, and concatenating long strings copies both strings. A loop of $n$ iterations with <code>x in lst</code> inside costs $\Theta(n^2)$, not $\Theta(n)$.</p>
+<pre><code class="language-python">def has_duplicates(a):
+    seen = []
+    for x in a:            # n iterations
+        if x in seen:      # hidden: up to len(seen) comparisons
+            return True
+        seen.append(x)
+    return False           # worst case: 0 + 1 + ... + (n-1) = n(n-1)/2 comparisons</code></pre>
+
+<h2 id="growth">Efficiency classes on a chart</h2>
+<p>The result of step 5 is an efficiency class. Compare the basic classes: toggle the functions and change the range of $n$. Turn on $2^n$ and see how quickly the exponential overtakes even $n^3$. On a logarithmic scale the exponential looks like a straight line.</p>
+<div class="viz" data-viz="growth">
+<figcaption>Basic efficiency classes: $\log n$, $n$, $n\log n$, $n^2$, $n^3$, $2^n$.</figcaption>
+</div>
+
+<h2 id="empirical">Empirical verification</h2>
+<p>It is useful to verify a derived formula with a program. <a data-term="empirical-analysis">Empirical analysis</a> (Levitin, §2.6) follows this plan:</p>
+<ol class="steps">
+<li>Understand the experiment’s purpose: here, to check a theoretical formula.</li>
+<li>Decide on the efficiency metric: an <a data-term="operation-counter">operation counter</a> for the basic operation (not time — it depends on the machine and is noisy).</li>
+<li>Decide on the characteristics of the input sample: sizes $n$ (doubling is convenient: 10, 20, 40, …) and kinds of inputs (worst, best, random).</li>
+<li>Write a program with a counter. If the basic operation occurs in several places in the code, all of them must be counted.</li>
+<li>Generate a sample of inputs.</li>
+<li>Run the program and record the observed data.</li>
+<li>Analyze the data: compare it with the formula and look at the ratios $C(2n)/C(n)$ — about 2 for linear, 4 for quadratic and 8 for cubic algorithms.</li>
+</ol>
+<p>An example of a counter for UniqueElements. The counter is incremented <em>before</em> the comparison so that the comparison that caused the exit is also counted:</p>
+<pre><code class="language-python">def unique_elements(a):
+    count = 0
+    n = len(a)
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            count += 1                 # basic operation: A[i] = A[j]
+            if a[i] == a[j]:
+                return False, count
+    return True, count
+
+for n in [2, 5, 10, 50, 100, 400]:
+    _, c = unique_elements(list(range(n)))     # worst case: all distinct
+    print(n, c, n * (n - 1) // 2, c == n * (n - 1) // 2)</code></pre>
+<p>The full set of scripts is in the <code>code/</code> folder (see the <a href="sources.html#code">description</a>). Each one prints a table “$n$ | counter | formula | match” and draws a chart. Results:</p>
+<figure>
+<img src="../assets/img/emp-unique-elements.svg" alt="UniqueElements: the comparison counter equals n(n−1)/2 in the worst case and 1 in the best case">
+<figcaption>UniqueElements: both kinds of worst-case inputs give exactly $\frac{n(n-1)}{2}$ (points on the dashed formula line); the best case $A[0] = A[1]$ gives one comparison for any $n$.</figcaption>
+</figure>
+<figure>
+<img src="../assets/img/emp-binary.svg" alt="Binary: the number of comparisons n > 1 grows stepwise as floor(log2 n) + 1">
+<figcaption>Binary: steps of height 1 at every power of two, verified for all $n$ from 1 to 5000 — $\lfloor\log_2 n\rfloor + 1$ without a single discrepancy.</figcaption>
+</figure>
+<figure>
+<img src="../assets/img/emp-seq-search.svg" alt="Sequential search: the average number of comparisons for n = 100 as a function of p matches the formula">
+<figcaption>Sequential search, $n = 100$, 20,000 runs for each $p$: experiment $100.0$; $87.4$; $75.2$; $62.7$; $50.3$ versus the formula $100$; $87.6$; $75.25$; $62.9$; $50.5$. The discrepancy is below 0.5 %.</figcaption>
+</figure>
+<figure>
+<img src="../assets/img/emp-selection-sort.svg" alt="Selection sort: n(n−1)/2 comparisons">
+<figcaption>Selection sort: exactly $\frac{n(n-1)}{2}$ comparisons on any input; $n - 1$ swaps.</figcaption>
+</figure>
+<figure>
+<img src="../assets/img/emp-nlogn.svg" alt="Nested loop with doubling: n(floor(log2 n)+1)">
+<figcaption>A linear loop with a doubling loop inside: $n(\lfloor\log_2 n\rfloor + 1)$ matches the counter.</figcaption>
+</figure>
+<p><strong>Conclusions.</strong> For MaxElement, UniqueElements, matrix multiplication, Binary, selection sort, the sum above the diagonal and the loops with a dependent bound, the counter matched the formula for all tested $n$. The average case of search matched within statistical error. The experiment also confirmed that in MaxElement the number of assignments varies from input to input (999, 0 and 8 for $n = 1000$ for increasing, decreasing and random arrays), while the number of comparisons does not. This is an empirical justification for the choice of the basic operation.</p>
+
+<h2 id="quiz">Module 1 quiz</h2>
+<p>Ten questions: terms, choosing the basic operation, sums and order of growth. Your progress is saved in the browser.</p>
+<div data-quiz="m1" class="quiz"></div>
+
+<h2 id="tasks">Problems</h2>
+<p>Each problem has three expandable blocks: a hint, the answer and a full solution. Try to solve it yourself first.</p>
+<p>A short checklist before the problems: (1) what does $n$ denote; (2) which operation of the innermost loop is executed on <em>every</em> iteration; (3) is there an early exit — if so, analyze the cases; (4) for each loop the number of repetitions is $u - l + 1$; (5) check the formula for $n = 1, 2, 3$.</p>
+<h3 id="tasks-a">Level A: direct application</h3>
+<div data-tasks="m1" data-level="A"></div>
+<h3 id="tasks-b">Level B: nested sums and cases</h3>
+<div data-tasks="m1" data-level="B"></div>
+<h3 id="tasks-c">Level C: average case and logarithmic loops</h3>
+<div data-tasks="m1" data-level="C"></div>
+<h3 id="tasks-f">Find the mistake</h3>
+<div data-tasks="m1" data-level="F"></div>
+<h3 id="tasks-e">Empirical problem</h3>
+<div data-tasks="m1" data-level="E"></div>
+
+<h2 id="summary">Summary</h2>
+<ul>
+<li>The analysis of a nonrecursive algorithm follows five steps: input size → basic operation → cases → sum → closed-form formula and class.</li>
+<li>The basic operation is executed on every iteration of the innermost loop: the comparison in MaxElement and UniqueElements, multiplication (by tradition) in matrix multiplication, the comparison $n > 1$ in Binary.</li>
+<li>A loop turns into a sum, nested loops into nested sums, which are evaluated from the inside out. The key is the number of terms $u - l + 1$.</li>
+<li>An early exit gives rise to the worst and best cases. The average case requires explicit assumptions; for search, $C_{avg} = \frac{p(n+1)}{2} + n(1-p)$.</li>
+<li>A multiplicative loop gives a logarithm: $\lfloor\log_2 n\rfloor + 1$ repetitions.</li>
+<li>A formula can always be verified: by hand for small $n$ and with a program that has a counter.</li>
+</ul>
+
+<h2 id="cheatsheet">Formula cheat sheet</h2>
+<div class="cheat">
+<div><div class="k">(R1), (R2)</div>$\sum c\,a_i = c\sum a_i$, &nbsp; $\sum(a_i \pm b_i) = \sum a_i \pm \sum b_i$</div>
+<div><div class="k">(S1) number of terms</div>$\sum_{i=l}^{u} 1 = u - l + 1$</div>
+<div><div class="k">(S2)</div>$\sum_{i=1}^{n} i = \frac{n(n+1)}{2} \in \Theta(n^2)$</div>
+<div><div class="k">squares</div>$\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6} \in \Theta(n^3)$</div>
+<div><div class="k">powers</div>$\sum_{i=1}^{n} i^k \approx \frac{n^{k+1}}{k+1} \in \Theta(n^{k+1})$</div>
+<div><div class="k">geometric</div>$\sum_{i=0}^{n} a^i = \frac{a^{n+1}-1}{a-1}$, &nbsp; $\sum_{i=0}^{n} 2^i = 2^{n+1} - 1$</div>
+<div><div class="k">MaxElement</div>$C(n) = n - 1 \in \Theta(n)$</div>
+<div><div class="k">UniqueElements</div>$C_{worst} = \frac{n(n-1)}{2}$, &nbsp; $C_{best} = 1$</div>
+<div><div class="k">matrices</div>$M(n) = n^3$, &nbsp; $T \approx (c_m + c_a)\,n^3$</div>
+<div><div class="k">Binary, number of bits</div>$C(n) = \lfloor\log_2 n\rfloor + 1 \in \Theta(\log n)$</div>
+<div><div class="k">search, average case</div>$C_{avg} = \frac{p(n+1)}{2} + n(1-p)$</div>
+<div><div class="k">time</div>$T(n) \approx c_{op}\,C(n)$</div>
+</div>
+</main>
+</div>
+</body>
+</html>

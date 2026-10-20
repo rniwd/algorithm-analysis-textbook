@@ -2,19 +2,21 @@
 (function () {
   "use strict";
 
+  var EN = document.documentElement.lang === "en";
+  function T(ru, en) { return EN ? en : ru; }
   var PAGES = [
-    { id: "intro", href: "intro.html", title: "Введение" },
-    { id: "module1", href: "module1.html", title: "Модуль 1" },
-    { id: "module2", href: "module2.html", title: "Модуль 2" },
-    { id: "glossary", href: "glossary.html", title: "Глоссарий" },
-    { id: "sources", href: "sources.html", title: "Источники" }
+    { id: "intro", href: "intro.html", title: T("Введение", "Introduction") },
+    { id: "module1", href: "module1.html", title: T("Модуль 1", "Module 1") },
+    { id: "module2", href: "module2.html", title: T("Модуль 2", "Module 2") },
+    { id: "glossary", href: "glossary.html", title: T("Глоссарий", "Glossary") },
+    { id: "sources", href: "sources.html", title: T("Источники", "Sources") }
   ];
   var LONG = {
-    intro: "Введение: основы анализа",
-    module1: "Модуль 1. Нерекурсивные алгоритмы",
-    module2: "Модуль 2. Рекурсивные алгоритмы",
-    glossary: "Глоссарий",
-    sources: "Источники"
+    intro: T("Введение: основы анализа", "Introduction: the basics"),
+    module1: T("Модуль 1. Нерекурсивные алгоритмы", "Module 1. Nonrecursive algorithms"),
+    module2: T("Модуль 2. Рекурсивные алгоритмы", "Module 2. Recursive algorithms"),
+    glossary: T("Глоссарий", "Glossary"),
+    sources: T("Источники", "Sources")
   };
 
   var page = document.body.getAttribute("data-page") || "";
@@ -22,11 +24,13 @@
   function buildHeader() {
     var header = document.createElement("header");
     header.className = "site-header";
-    var html = '<div class="inner"><a class="brand" href="index.html">Анализ алгоритмов</a><nav class="tabs" aria-label="Разделы учебника">';
+    var html = '<div class="inner"><a class="brand" href="index.html">3AM</a><nav class="tabs" aria-label="' + T("Разделы учебника", "Textbook sections") + '">';
     PAGES.forEach(function (p) {
       html += '<a href="' + p.href + '"' + (p.id === page ? ' aria-current="page"' : "") + ">" + p.title + "</a>";
     });
-    html += "</nav></div>";
+    var file = location.pathname.split("/").pop() || "index.html";
+    var other = (EN ? "../" : "en/") + file + location.hash;
+    html += '</nav><a class="lang-switch" href="' + other + '" hreflang="' + (EN ? "ru" : "en") + '" title="' + T("English version", "Русская версия") + '">' + T("EN", "RU") + "</a></div>";
     header.innerHTML = html;
     document.body.insertBefore(header, document.body.firstChild);
   }
@@ -40,15 +44,15 @@
     var next = i >= 0 && i < PAGES.length - 1 ? PAGES[i + 1] : (page === "index" ? PAGES[0] : null);
     var nav = document.createElement("nav");
     nav.className = "pager";
-    nav.setAttribute("aria-label", "Предыдущая и следующая страницы");
+    nav.setAttribute("aria-label", T("Предыдущая и следующая страницы", "Previous and next pages"));
     var html = "";
-    if (prev) html += '<a class="prev" href="' + prev.href + '"><small>← предыдущая</small>' + (LONG[prev.id] || "Обложка и оглавление") + "</a>";
-    if (next) html += '<a class="next" href="' + next.href + '"><small>следующая →</small>' + LONG[next.id] + "</a>";
+    if (prev) html += '<a class="prev" href="' + prev.href + '"><small>' + T("← предыдущая", "← previous") + "</small>" + (LONG[prev.id] || T("Обложка и оглавление", "Cover and contents")) + "</a>";
+    if (next) html += '<a class="next" href="' + next.href + '"><small>' + T("следующая →", "next →") + "</small>" + LONG[next.id] + "</a>";
     nav.innerHTML = html;
     main.appendChild(nav);
     var foot = document.createElement("div");
     foot.className = "site-foot";
-    foot.textContent = "Электронный учебник по анализу эффективности алгоритмов. Основа — А. Левитин, «Introduction to the Design and Analysis of Algorithms», 3-е изд., §2.1–2.6.";
+    foot.textContent = T("3AM — электронный учебник по анализу эффективности алгоритмов. Основа — А. Левитин, «Introduction to the Design and Analysis of Algorithms», 3-е изд., §2.1–2.6.", "3AM — an e-textbook on the analysis of algorithm efficiency. Based on A. Levitin, “Introduction to the Design and Analysis of Algorithms”, 3rd ed., §2.1–2.6.");
     main.appendChild(foot);
   }
 
@@ -69,7 +73,7 @@
       var a = document.createElement("a");
       a.className = "anchor";
       a.href = "#" + h.id;
-      a.setAttribute("aria-label", "Ссылка на этот раздел");
+      a.setAttribute("aria-label", T("Ссылка на этот раздел", "Link to this section"));
       a.textContent = "#";
       h.appendChild(a);
     });
@@ -90,7 +94,7 @@
     if (!toc) return;
     var heads = Array.prototype.slice.call(document.querySelectorAll("main h2"));
     if (!heads.length) return;
-    var html = '<div class="toc-title">На этой странице</div><button class="toc-toggle" type="button" aria-expanded="false"><span>Разделы: <span class="current"></span></span><span class="chev">▾</span></button><ol>';
+    var html = '<div class="toc-title">' + T("На этой странице", "On this page") + '</div><button class="toc-toggle" type="button" aria-expanded="false"><span>' + T("Разделы:", "Sections:") + ' <span class="current"></span></span><span class="chev">▾</span></button><ol>';
     heads.forEach(function (h) {
       html += '<li><a href="#' + h.id + '">' + escapeHtml(headingText(h)) + "</a></li>";
     });
@@ -161,7 +165,7 @@
     document.querySelectorAll("[data-term]").forEach(function (a) {
       var key = a.getAttribute("data-term");
       var g = G[key];
-      if (!g) { console.warn("Нет термина в глоссарии:", key); return; }
+      if (!g) { console.warn("Glossary term missing:", key); return; }
       if (a.tagName === "A") a.href = "glossary.html#" + key;
       a.classList.add("term");
       a.addEventListener("mouseenter", show);
@@ -224,6 +228,7 @@
 
   window.App = window.App || {};
   window.App.typeset = typeset;
+  window.App.T = T;
 
   document.addEventListener("DOMContentLoaded", function () {
     buildHeader();

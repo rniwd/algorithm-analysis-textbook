@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources — 3AM</title>
+<meta name="description" content="References, program code for the empirical part and the tools used.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../data/en/glossary.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="sources">
+<div class="layout single">
+<main>
+<p class="kicker">Reference</p>
+<h1>Sources</h1>
+
+<h2 id="literature">References</h2>
+<ol>
+<li>Levitin A. <em>Introduction to the Design and Analysis of Algorithms</em>, 3rd ed. Pearson, 2012. Sections 2.1–2.6, 8.2 (memory functions), Appendices A and B. <strong>Primary source:</strong> all definitions, formulas and notation in this textbook are consistent with this book.</li>
+<li>Cormen T. H., Leiserson C. E., Rivest R. L., Stein C. <em>Introduction to Algorithms</em>, 4th ed. MIT Press, 2022. Chapters 3, 4, Appendix A; Chapter 7 problems on stack depth and tail-recursion elimination.</li>
+<li>Sedgewick R., Wayne K. <em>Algorithms</em>, 4th ed. Addison-Wesley, 2011. Section 1.4 (empirical analysis, doubling test).</li>
+<li>Kleinberg J., Tardos É. <em>Algorithm Design</em>. Pearson, 2005. Chapters 2, 5.</li>
+<li>Graham R. L., Knuth D. E., Patashnik O. <em>Concrete Mathematics</em>, 2nd ed. Addison-Wesley, 1994. Chapters 1, 2, 7 (sums, recurrences, Tower of Hanoi).</li>
+<li>Lecture 4. Mathematical Analysis of Nonrecursive Algorithms (course materials).</li>
+<li>Lecture 5. Mathematical Analysis of Recursive Algorithms (course materials).</li>
+</ol>
+
+<h2 id="code">Program code</h2>
+<p>The empirical part is written in Python and is located in the <code>code/</code> folder of the repository <a href="https://github.com/rniwd/algorithm-analysis-textbook/tree/main/code">github.com/rniwd/algorithm-analysis-textbook</a>. To run it you need Python 3 and matplotlib:</p>
+<pre><code>python3 -m pip install matplotlib
+cd code
+python3 run_all.py            # all scripts with counters
+python3 verify_answers.py     # checks all numerical answers to problems and quizzes</code></pre>
+<div class="table-wrap">
+<table>
+<thead><tr><th>File</th><th>What it checks</th></tr></thead>
+<tbody>
+<tr><td><code>m1_max_element.py</code></td><td>MaxElement: $C(n) = n - 1$</td></tr>
+<tr><td><code>m1_unique_elements.py</code></td><td>UniqueElements: both worst-case inputs $\frac{n(n-1)}{2}$, best case $1$</td></tr>
+<tr><td><code>m1_matrix.py</code></td><td>matrices: $M(n) = A(n) = n^3$</td></tr>
+<tr><td><code>m1_binary.py</code></td><td>Binary: $\lfloor\log_2 n\rfloor + 1$; the loop $i \leftarrow 2i$</td></tr>
+<tr><td><code>m1_sequential_search.py</code></td><td>average case $\frac{p(n+1)}{2} + n(1-p)$</td></tr>
+<tr><td><code>m1_selection_sort.py</code>, <code>m1_upper_sum.py</code>, <code>m1_dependent_loops.py</code></td><td>own examples of Module 1 and loops with a dependent bound</td></tr>
+<tr><td><code>m2_factorial.py</code>, <code>m2_hanoi.py</code>, <code>m2_binrec.py</code>, <code>m2_fibonacci.py</code></td><td>worked examples of Module 2</td></tr>
+<tr><td><code>m2_rec_max.py</code>, <code>m2_fast_pow.py</code>, <code>m2_rec_sum.py</code></td><td>own examples of Module 2, Python recursion limit</td></tr>
+<tr><td><code>tasks/m1_e1_triple_loop.py</code>, <code>tasks/m2_e1_split.py</code></td><td>solutions to the empirical problems</td></tr>
+<tr><td><code>verify_answers.py</code></td><td>all numerical answers to the site's problems and quizzes</td></tr>
+</tbody>
+</table>
+</div>
+<p>The charts produced by these scripts are shown in the empirical check sections of <a href="module1.html#empirical">Module 1</a> and <a href="module2.html#empirical">Module 2</a>.</p>
+
+<h2 id="tools">Tools</h2>
+<ul>
+<li>Formulas are typeset with <a href="https://katex.org">KaTeX</a>, code highlighting uses <a href="https://highlightjs.org">highlight.js</a>. The visualizations are written in plain JavaScript and SVG without libraries.</li>
+<li>The charts of the empirical part were made with matplotlib.</li>
+<li>The site is static; it runs on GitHub Pages and when <code>index.html</code> is opened from disk. Quiz progress is stored only in your browser.</li>
+</ul>
+
+<h2 id="ai">Use of AI</h2>
+<p>The Claude Code assistant was used in preparing the textbook: drafts of the text, pseudocode, problems, visualizations and scripts. All definitions and formulas were checked against Levitin's book. Numerical answers were verified by the <code>verify_answers.py</code> program, and the solutions were checked by hand by the group members. Details are in the group report.</p>
+</main>
+</div>
+</body>
+</html>

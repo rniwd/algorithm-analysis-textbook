@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — 3AM</title>
+<meta name="description" content="A glossary of key terms in the analysis of algorithm efficiency.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../data/en/glossary.js"></script>
+<script>
+  // The glossary page is built from data/en/glossary.js (the same data as the tooltips)
+  window.App = window.App || {};
+  window.App.renderContent = function () {
+    var G = window.GLOSSARY, box = document.getElementById("terms"), nav = document.getElementById("letters");
+    var keys = Object.keys(G).sort(function (a, b) { return G[a].term.localeCompare(G[b].term, "en"); });
+    var letters = {}, html = "";
+    keys.forEach(function (k) {
+      var g = G[k], L = g.term.charAt(0).toUpperCase();
+      var anchor = "";
+      if (!letters[L]) { letters[L] = k; anchor = ' data-letter="' + L + '"'; }
+      html += '<dt id="' + k + '"' + anchor + ">" + g.term + "</dt><dd>" + g.full +
+        (g.see ? ' <span class="see"><a href="' + g.see + '">→ where in the textbook</a></span>' : "") + "</dd>";
+    });
+    box.innerHTML = html;
+    nav.innerHTML = Object.keys(letters).map(function (L) { return '<a href="#' + letters[L] + '">' + L + "</a>"; }).join("");
+  };
+</script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="glossary">
+<div class="layout single">
+<main>
+<p class="kicker">Reference</p>
+<h1>Glossary</h1>
+<p class="lead">Key terms in alphabetical order. The “where in the textbook” link leads to the section where the term is introduced.</p>
+<nav class="letter-nav" id="letters" aria-label="Letters"></nav>
+<dl class="glossary" id="terms"></dl>
+</main>
+</div>
+</body>
+</html>

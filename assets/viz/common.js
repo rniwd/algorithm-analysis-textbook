@@ -2,6 +2,9 @@
 (function () {
   "use strict";
   var NS = "http://www.w3.org/2000/svg";
+  var EN = document.documentElement.lang === "en";
+  // перевод строки интерфейса: T("рус", "eng")
+  function T(ru, en) { return EN ? en : ru; }
 
   function svg(tag, attrs, parent) {
     var el = document.createElementNS(NS, tag);
@@ -36,14 +39,14 @@
     this.opts = opts;
     this.delay = opts.speed || 600;
     var c = opts.controls;
-    if (opts.back !== false) this.bBack = html("button", { type: "button", "aria-label": "Шаг назад" }, c, "← шаг");
-    this.bStep = html("button", { type: "button" }, c, "шаг →");
-    this.bPlay = html("button", { type: "button", class: "primary" }, c, "пуск");
-    this.bReset = html("button", { type: "button" }, c, "сброс");
+    if (opts.back !== false) this.bBack = html("button", { type: "button", "aria-label": T("Шаг назад", "Step back") }, c, T("← шаг", "← step"));
+    this.bStep = html("button", { type: "button" }, c, T("шаг →", "step →"));
+    this.bPlay = html("button", { type: "button", class: "primary" }, c, T("пуск", "play"));
+    this.bReset = html("button", { type: "button" }, c, T("сброс", "reset"));
     if (opts.speedControl) {
       var lab = html("label", null, c);
-      lab.appendChild(document.createTextNode("скорость"));
-      this.range = html("input", { type: "range", min: "0", max: "100", value: "50", "aria-label": "Скорость анимации" }, lab);
+      lab.appendChild(document.createTextNode(T("скорость", "speed")));
+      this.range = html("input", { type: "range", min: "0", max: "100", value: "50", "aria-label": T("Скорость анимации", "Animation speed") }, lab);
       var update = function () {
         // 0 → 1500 мс, 100 → 40 мс (логарифмическая шкала)
         var v = +self.range.value / 100;
@@ -69,7 +72,7 @@
     var t = this.total();
     if (this.bBack) this.bBack.disabled = this.k <= 0;
     this.bStep.disabled = this.k >= t;
-    this.bPlay.textContent = this.timer ? "пауза" : (this.k >= t ? "заново" : "пуск");
+    this.bPlay.textContent = this.timer ? T("пауза", "pause") : (this.k >= t ? T("заново", "replay") : T("пуск", "play"));
   };
   Player.prototype.play = function () {
     var self = this;
@@ -95,5 +98,5 @@
     else fn();
   }
 
-  window.Viz = { svg: svg, html: html, css: css, Player: Player, floorLog2: floorLog2, onReady: onReady };
+  window.Viz = { T: T, EN: EN, num: function (x, d) { var s = x.toFixed(d); return EN ? s : s.replace(".", ","); }, svg: svg, html: html, css: css, Player: Player, floorLog2: floorLog2, onReady: onReady };
 })();

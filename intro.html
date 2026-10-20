@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Введение — Анализ алгоритмов</title>
+<title>Введение — 3AM</title>
 <meta name="description" content="Размер входа, базовая операция, порядок роста, нотации O, Ω, Θ, худший, лучший и средний случаи.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <link rel="icon" href="data:,">
@@ -81,6 +81,18 @@ $$\frac{T(2n)}{T(n)} \approx \frac{c_{op}\cdot\tfrac12(2n)^2}{c_{op}\cdot\tfrac1
 </svg>
 <figcaption>$t(n) \in \Theta(g(n))$: начиная с $n_0$ функция зажата между $c_2 g(n)$ и $c_1 g(n)$.</figcaption>
 </figure>
+<p>Как не перепутать: $O$ — «растёт не быстрее», $\Omega$ — «растёт не медленнее», $\Theta$ — «растёт так же». $\Theta$ означает $O$ и $\Omega$ одновременно. Пример для $t(n) = 3n^2 + 5$:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th></th><th>$g(n) = n$</th><th>$g(n) = n^2$</th><th>$g(n) = n^3$</th></tr></thead>
+<tbody>
+<tr><td>$t \in O(g)$?</td><td>нет</td><td>да</td><td>да</td></tr>
+<tr><td>$t \in \Omega(g)$?</td><td>да</td><td>да</td><td>нет</td></tr>
+<tr><td>$t \in \Theta(g)$?</td><td>нет</td><td>да</td><td>нет</td></tr>
+</tbody>
+</table>
+</div>
+<p>Поэтому запись $3n^2 + 5 \in O(n^3)$ верна, но малоинформативна; точный ответ даёт $\Theta(n^2)$. В разборах мы ищем именно $\Theta$.</p>
 <p>Пример доказательства по определению: $\tfrac12 n(n-1) \in \Theta(n^2)$. Сверху: $\tfrac12 n^2 - \tfrac12 n \le \tfrac12 n^2$ при $n \ge 0$. Снизу: при $n \ge 2$ имеем $\tfrac12 n \le \tfrac14 n^2$, поэтому $\tfrac12 n^2 - \tfrac12 n \ge \tfrac14 n^2$. Подходят $c_1 = \tfrac12$, $c_2 = \tfrac14$, $n_0 = 2$.</p>
 <p>На практике удобнее сравнивать через предел:</p>
 $$\lim_{n\to\infty}\frac{t(n)}{g(n)} = \begin{cases} 0 & t \text{ растёт медленнее: } t \in O(g),\\ c > 0 & \text{одинаковый порядок: } t \in \Theta(g),\\ \infty & t \text{ растёт быстрее: } t \in \Omega(g).\end{cases}$$

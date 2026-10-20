@@ -1,7 +1,7 @@
 /* Ханойская башня: анимация, дерево вызовов, стек, таблица M(n), режим «попробуй сам» */
 (function () {
   "use strict";
-  var V = window.Viz, svg = V.svg, html = V.html;
+  var V = window.Viz, svg = V.svg, html = V.html, T = V.T;
   var PEGS = ["A", "B", "C"];
 
   // Трасса алгоритма: узлы дерева (в порядке вызова) и ходы (в порядке выполнения)
@@ -39,9 +39,9 @@
     var n = 3, data = trace(n), mode = "algo";
     var userPegs, userMoves, selected = null, drag = null;
 
-    var modes = html("div", { class: "hanoi-modes", role: "group", "aria-label": "Режим" }, root);
-    var bAlgo = html("button", { type: "button", "aria-pressed": "true" }, modes, "Алгоритм");
-    var bUser = html("button", { type: "button", "aria-pressed": "false" }, modes, "Попробуй сам");
+    var modes = html("div", { class: "hanoi-modes", role: "group", "aria-label": T("Режим", "Mode") }, root);
+    var bAlgo = html("button", { type: "button", "aria-pressed": "true" }, modes, T("Алгоритм", "Algorithm"));
+    var bUser = html("button", { type: "button", "aria-pressed": "false" }, modes, T("Попробуй сам", "Try it yourself"));
 
     var grid = html("div", { class: "hanoi-grid" }, root);
     var left = html("div", { class: "viz-stage" }, grid);
@@ -49,7 +49,7 @@
 
     var counter = html("div", { class: "hanoi-big", "aria-live": "polite" }, left);
     var W = 420, H = 190, pegX = [75, 210, 345], baseY = 170, diskH = 15;
-    var board = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Три стержня с дисками" }, left);
+    var board = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": T("Три стержня с дисками", "Three pegs with disks") }, left);
     svg("rect", { x: 10, y: baseY, width: W - 20, height: 4, rx: 2, fill: "var(--line)" }, board);
     var pegEls = pegX.map(function (x, i) {
       var g = svg("g", { "data-peg": i }, board);
@@ -64,16 +64,18 @@
     var status = html("div", { class: "viz-status" }, left);
 
     var treeStage = html("div", { class: "viz-stage", style: "margin-top:1rem" }, root);
-    var treeTitle = html("p", { class: "panel-title" }, treeStage, "Дерево рекурсивных вызовов");
+    var treeTitle = html("p", { class: "panel-title" }, treeStage, T("Дерево рекурсивных вызовов", "Tree of recursive calls"));
     var treeBox = html("div", null, treeStage);
-    var stackTitle = html("p", { class: "panel-title" }, right, "Стек вызовов");
+    var treeLegend = html("div", { class: "legend", style: "margin-top:0.5rem" }, treeStage);
+    treeLegend.innerHTML = [["var(--accent)", "var(--accent)", T("текущий вызов (делает этот ход)", "current call (makes this move)")], ["var(--accent-soft)", "var(--accent)", T("вызов в стеке, ещё не завершён", "call on the stack, not finished")], ["var(--mark)", "var(--line)", T("вызов уже сделал свой ход", "call has made its move")], ["var(--surface)", "var(--line)", T("вызов ещё не начат", "call not started yet")]].map(function (x) { return '<span style="display:inline-flex;align-items:center;gap:0.3rem"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="' + x[0] + '" stroke="' + x[1] + '" stroke-width="1.5"/></svg>' + x[2] + "</span>"; }).join("") + '<span>' + T("Номер узла слева направо = номер хода.", "Node order from left to right = move number.") + "</span>";
+    var stackTitle = html("p", { class: "panel-title" }, right, T("Стек вызовов", "Call stack"));
     var stackBox = html("div", { class: "stack-panel", "aria-live": "off" }, right);
     var stackNote = html("div", { class: "viz-status" }, right);
 
     var controls = html("div", { class: "viz-controls" }, root);
     var nLab = html("label", null, controls);
     nLab.appendChild(document.createTextNode("n ="));
-    var nSel = html("select", { "aria-label": "Число дисков" }, nLab);
+    var nSel = html("select", { "aria-label": T("Число дисков", "Number of disks") }, nLab);
     for (var i = 1; i <= 8; i++) {
       var o = html("option", { value: i }, nSel, String(i));
       if (i === n) o.selected = true;
@@ -87,8 +89,8 @@
       speed: 600,
       speedControl: true
     });
-    var bUndo = html("button", { type: "button" }, userCtl, "отменить ход");
-    var bUserReset = html("button", { type: "button" }, userCtl, "начать заново");
+    var bUndo = html("button", { type: "button" }, userCtl, T("отменить ход", "undo move"));
+    var bUserReset = html("button", { type: "button" }, userCtl, T("начать заново", "start over"));
 
     // ---- таблица M(n) ----
     var tableWrap = html("div", { class: "table-wrap", style: "margin-top:1.2rem" }, root);
@@ -100,15 +102,15 @@
       var tr = html("tr", { class: "pending" }, tbody);
       var m = Math.pow(2, r) - 1, mp = Math.pow(2, r - 1) - 1;
       html("td", null, tr, String(r));
-      html("td", null, tr, r === 1 ? "1 (начальное условие)" : "2·" + mp + " + 1 = " + m);
+      html("td", null, tr, r === 1 ? T("1 (начальное условие)", "1 (initial condition)") : "2·" + mp + " + 1 = " + m);
       html("td", null, tr, String(m));
       html("td", null, tr, r === 1 ? "—" : (m / mp).toFixed(3));
       rows.push(tr);
     }
     var tableCtl = html("div", { class: "viz-controls" }, root);
-    var bRow = html("button", { type: "button" }, tableCtl, "следующая строка");
-    var bRows = html("button", { type: "button" }, tableCtl, "заполнить всё");
-    var tableNote = html("span", { class: "muted small" }, tableCtl, "Строка заполняется и после полного прогона анимации для этого n.");
+    var bRow = html("button", { type: "button" }, tableCtl, T("следующая строка", "next row"));
+    var bRows = html("button", { type: "button" }, tableCtl, T("заполнить всё", "fill all"));
+    var tableNote = html("span", { class: "muted small" }, tableCtl, T("Строка заполняется и после полного прогона анимации для этого n.", "A row is also filled after the animation for that n runs to the end."));
     var filled = 0;
     function fillTo(k) {
       filled = Math.max(filled, k);
@@ -126,12 +128,12 @@
       treeEls = null;
       if (n > 5) {
         html("p", { class: "muted small", style: "margin:0.3rem 0" }, treeBox,
-          "Дерево показывается при n ≤ 5: при n = " + n + " в нём " + (Math.pow(2, n) - 1) + " узлов. Глубина по-прежнему n = " + n + ".");
+          T("Дерево показывается при n ≤ 5: при n = ", "The tree is shown for n ≤ 5: for n = ") + n + T(" в нём ", " it has ") + (Math.pow(2, n) - 1) + T(" узлов. Глубина по-прежнему n = ", " nodes. The depth is still n = ") + n + ".");
         return;
       }
       var cnt = data.nodes.length, gap = Math.max(22, Math.min(46, 300 / cnt * 1.6));
       var w = cnt * gap + 10, levelH = 44, h = n * levelH + 10, rad = n >= 5 ? 9 : 11;
-      var s = svg("svg", { viewBox: "0 0 " + w + " " + h, role: "img", "aria-label": "Дерево вызовов: узел подписан числом дисков" }, treeBox);
+      var s = svg("svg", { viewBox: "0 0 " + w + " " + h, role: "img", "aria-label": T("Дерево вызовов: узел подписан числом дисков", "Call tree: each node is labeled with the number of disks") }, treeBox);
       s.style.maxWidth = Math.min(w * 1.25, 760) + "px";
       s.style.margin = "0 auto";
       var x = function (nd) { return 5 + (nd.move - 0.5) * gap; };
@@ -148,7 +150,7 @@
         var t = svg("text", { x: x(nd), y: y(nd) + 4, "text-anchor": "middle", "font-size": rad > 10 ? 11 : 10 }, g);
         t.textContent = nd.m;
         var tt = svg("title", null, g);
-        tt.textContent = label(nd) + ", ход №" + nd.move;
+        tt.textContent = label(nd) + T(", ход №", ", move #") + nd.move;
         return { c: c, t: t, e: e };
       });
     }
@@ -185,8 +187,8 @@
       frames.forEach(function (nd, i) {
         html("div", { class: "stack-frame" + (i === frames.length - 1 ? " top" : "") }, stackBox, label(nd));
       });
-      if (k === data.moves.length && k > 0) stackNote.innerHTML = "Последний ход сделан, дальше вызовы только возвращаются. Наибольшая глубина стека — <b>n = " + n + "</b>.";
-      else stackNote.innerHTML = "Глубина сейчас: <b>" + frames.length + "</b> &nbsp;·&nbsp; максимум за всё время: <b>n = " + n + "</b>";
+      if (k === data.moves.length && k > 0) stackNote.innerHTML = T("Последний ход сделан, дальше вызовы только возвращаются. Наибольшая глубина стека — <b>n = ", "The last move is made; the calls now only return. Maximum stack depth: <b>n = ") + n + "</b>.";
+      else stackNote.innerHTML = T("Глубина сейчас: <b>", "Current depth: <b>") + frames.length + T("</b> &nbsp;·&nbsp; максимум за всё время: <b>n = ", "</b> &nbsp;·&nbsp; maximum over the whole run: <b>n = ") + n + "</b>";
     }
 
     // ---- диски ----
@@ -226,14 +228,14 @@
     function render(k) {
       var total = data.moves.length;
       placeDisks(pegsAt(k), false);
-      counter.textContent = "ход " + k + " из 2" + sup(n) + " − 1 = " + total;
-      if (k === 0) status.innerHTML = "Нажмите «шаг» или «пуск». Вызов: <b>" + label(data.nodes[0]) + "</b>";
+      counter.textContent = T("ход ", "move ") + k + T(" из 2", " of 2") + sup(n) + " − 1 = " + total;
+      if (k === 0) status.innerHTML = T("Нажмите «шаг» или «пуск». Вызов: <b>", "Press “step” or “play”. Call: <b>") + label(data.nodes[0]) + "</b>";
       else {
         var mv = data.moves[k - 1];
-        status.innerHTML = "Диск " + mv.disk + ": " + PEGS[mv.from] + " → " + PEGS[mv.to] + " &nbsp;·&nbsp; ход делает вызов <b>" + label(data.nodes[mv.node]) + "</b>";
+        status.innerHTML = T("Диск ", "Disk ") + mv.disk + ": " + PEGS[mv.from] + " → " + PEGS[mv.to] + T(" &nbsp;·&nbsp; ход делает вызов <b>", " &nbsp;·&nbsp; the move is made by call <b>") + label(data.nodes[mv.node]) + "</b>";
       }
       if (k === total) {
-        status.innerHTML += "<br>Готово: ровно " + total + " = 2" + sup(n) + " − 1 ходов.";
+        status.innerHTML += T("<br>Готово: ровно ", "<br>Done: exactly ") + total + " = 2" + sup(n) + T(" − 1 ходов.", " − 1 moves.");
         fillTo(n);
       }
       renderTree(k);
@@ -264,8 +266,8 @@
       selected = null;
       placeDisks(userPegs, true);
       highlightPeg(null);
-      counter.textContent = "ваши ходы: 0 · минимум 2" + sup(n) + " − 1 = " + (Math.pow(2, n) - 1);
-      status.innerHTML = "Перетащите верхний диск на другой стержень или нажмите на стержень-источник, затем на стержень-приёмник. Цель — собрать башню на C.";
+      counter.textContent = T("ваши ходы: 0 · минимум 2", "your moves: 0 · minimum 2") + sup(n) + " − 1 = " + (Math.pow(2, n) - 1);
+      status.innerHTML = T("Перетащите верхний диск на другой стержень или нажмите на стержень-источник, затем на стержень-приёмник. Цель — собрать башню на C.", "Drag the top disk to another peg, or tap the source peg and then the target peg. Goal: build the tower on C.");
       bUndo.disabled = true;
     }
 
@@ -276,10 +278,10 @@
     function tryMove(from, to) {
       if (from === to) return false;
       var src = userPegs[from], dst = userPegs[to];
-      if (!src.length) { status.innerHTML = '<span class="msg-bad">На стержне ' + PEGS[from] + " нет дисков.</span>"; return false; }
+      if (!src.length) { status.innerHTML = '<span class="msg-bad">' + T("На стержне ", "Peg ") + PEGS[from] + T(" нет дисков.", " has no disks.") + "</span>"; return false; }
       var d = src[src.length - 1];
       if (dst.length && dst[dst.length - 1] < d) {
-        status.innerHTML = '<span class="msg-bad">Нельзя: диск ' + d + " больше диска " + dst[dst.length - 1] + " на стержне " + PEGS[to] + ".</span>";
+        status.innerHTML = '<span class="msg-bad">' + T("Нельзя: диск ", "Not allowed: disk ") + d + T(" больше диска ", " is larger than disk ") + dst[dst.length - 1] + T(" на стержне ", " on peg ") + PEGS[to] + ".</span>";
         return false;
       }
       dst.push(src.pop());
@@ -290,14 +292,14 @@
 
     function afterUserMove(d, from, to) {
       var min = Math.pow(2, n) - 1, m = userMoves.length;
-      counter.textContent = "ваши ходы: " + m + " · минимум 2" + sup(n) + " − 1 = " + min;
+      counter.textContent = T("ваши ходы: ", "your moves: ") + m + T(" · минимум 2", " · minimum 2") + sup(n) + " − 1 = " + min;
       bUndo.disabled = m === 0;
       if (userPegs[2].length === n) {
         status.innerHTML = m === min
-          ? '<span class="msg-ok">Башня собрана за ' + m + " ходов — это минимум 2" + sup(n) + " − 1.</span>"
-          : '<span class="msg-ok">Башня собрана за ' + m + " ходов.</span> Минимум — " + min + ", лишних ходов: " + (m - min) + ".";
+          ? '<span class="msg-ok">' + T("Башня собрана за ", "Tower built in ") + m + T(" ходов — это минимум 2", " moves — the minimum 2") + sup(n) + " − 1.</span>"
+          : '<span class="msg-ok">' + T("Башня собрана за ", "Tower built in ") + m + T(" ходов.</span> Минимум — ", " moves.</span> Minimum: ") + min + T(", лишних ходов: ", ", extra moves: ") + (m - min) + ".";
       } else if (d) {
-        status.innerHTML = "Диск " + d + ": " + PEGS[from] + " → " + PEGS[to] + ".";
+        status.innerHTML = T("Диск ", "Disk ") + d + ": " + PEGS[from] + " → " + PEGS[to] + ".";
       }
     }
 
@@ -307,7 +309,7 @@
       userPegs[last[0]].push(userPegs[last[1]].pop());
       placeDisks(userPegs, false);
       afterUserMove(0);
-      status.textContent = "Ход отменён.";
+      status.textContent = T("Ход отменён.", "Move undone.");
     });
     bUserReset.addEventListener("click", startUser);
 
@@ -360,7 +362,7 @@
         if (!userPegs[i].length) return;
         selected = i;
         highlightPeg(i);
-        status.textContent = "Выбран стержень " + PEGS[i] + ". Теперь выберите, куда переложить диск.";
+        status.textContent = T("Выбран стержень ", "Selected peg ") + PEGS[i] + T(". Теперь выберите, куда переложить диск.", ". Now choose where to move the disk.");
       } else {
         var from = selected;
         selected = null;

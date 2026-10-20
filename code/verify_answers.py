@@ -488,9 +488,9 @@ CLAIMS[19] = ("Факториал: глубина n+1 (n=5)", fact_depth(5), 6)
 CHECK_RE = re.compile(r"^\s*checks:\s*(\[.*\])\s*,?\s*$")
 
 
-def load_checks():
+def load_checks(data_dir=DATA):
     items = []
-    for path in sorted(DATA.glob("*.js")):
+    for path in sorted(data_dir.glob("*.js")):
         current = None
         for line in path.read_text(encoding="utf-8").splitlines():
             m_id = re.match(r'^\s*(?:\{\s*)?id:\s*"([^"]+)"', line)
@@ -560,9 +560,9 @@ def run_check(chk):
 
 # ---------- структура банка заданий ----------
 
-def structure():
+def structure(data_dir=DATA):
     errors, stats = [], {}
-    qtext = (DATA / "quizzes.js").read_text(encoding="utf-8")
+    qtext = (data_dir / "quizzes.js").read_text(encoding="utf-8")
     parts = re.split(r"window\.QUIZ\.(\w+)\s*=\s*\[", qtext)
     for name, body in zip(parts[1::2], parts[2::2]):
         qs = re.split(r'\n\s*\{\s*\n\s*id:\s*"', body)[1:]
@@ -576,7 +576,7 @@ def structure():
                 errors.append(f"{qid}: верных вариантов {n_ok}, нужен 1")
             if n_why != n_opt or n_opt < 3:
                 errors.append(f"{qid}: вариантов {n_opt}, объяснений {n_why}")
-    for path in sorted(DATA.glob("tasks-*.js")):
+    for path in sorted(data_dir.glob("tasks-*.js")):
         t = path.read_text(encoding="utf-8")
         blocks = re.split(r'\n\s*\{\s*\n\s*id:\s*"', t)[1:]
         for b in blocks:
@@ -624,6 +624,36 @@ def main():
         failed += 1
         print("FAIL недостаточно заданий")
     print()
+
+    # Английская версия: те же проверки, та же структура, те же ответы
+    en_dir = DATA / "en"
+    if en_dir.is_dir():
+        print("Английская версия (data/en)")
+        print("-" * 72)
+        en_checks = load_checks(en_dir)
+        ru_map = {(f, q): lst for f, q, lst in checks}
+        for fname, qid, lst in en_checks:
+            if ru_map.get((fname, qid)) != lst:
+                failed += 1
+                print(f"FAIL {fname} {qid}: checks отличаются от русской версии")
+            for chk in lst:
+                ok, msg = run_check(chk)
+                failed += not ok
+                if not ok:
+                    print(f"FAIL {fname} {qid} {msg}")
+        if len(en_checks) != len(checks):
+            failed += 1
+            print(f"FAIL число проверок: en {len(en_checks)}, ru {len(checks)}")
+        en_errors, en_stats = structure(en_dir)
+        for e in en_errors:
+            print("FAIL", e)
+        failed += len(en_errors)
+        if en_stats != stats:
+            failed += 1
+            print("FAIL состав заданий отличается от русской версии:", en_stats)
+        print(f"     проверок: {sum(len(l) for _, _, l in en_checks)}, вопросов и задач: {sum(en_stats.values())} — "
+              + ("совпадает с русской версией" if en_stats == stats and not en_errors else "есть расхождения"))
+        print()
     total = sum(len(lst) for _, _, lst in checks) + len(CLAIMS)
     if failed:
         print(f"ИТОГ: ошибок {failed}")

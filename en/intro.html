@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction — 3AM</title>
+<meta name="description" content="Input size, basic operation, order of growth, O, Ω and Θ notations, worst, best and average cases.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../data/en/glossary.js"></script>
+<script defer src="../data/en/quizzes.js"></script>
+<script defer src="../assets/quiz.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="intro">
+<div class="layout">
+<nav class="toc" aria-label="Page sections"></nav>
+<main>
+<p class="kicker">Introduction</p>
+<h1>How to Measure an Algorithm's Efficiency</h1>
+<p class="lead">A short review of the basics from Levitin §2.1–2.2. The modules cannot be read without it: everything that follows is counting one operation as a function of the input size.</p>
+
+<h2 id="size">Input size</h2>
+<p>Almost every algorithm runs longer on larger inputs. Therefore efficiency is expressed as a function of a parameter $n$, the <a data-term="input-size">input size</a>.</p>
+<ul>
+<li>Sorting, searching, finding the maximum of an array: $n$ is the number of elements.</li>
+<li>Multiplying $n\times n$ matrices: usually the matrix order $n$. One could also take the number of elements $N = n^2$, but then the same algorithm gets a different class (see <a href="module1.html#m1-a3">problem A3</a>).</li>
+<li>The input is a single number $n$ (primality testing): the size is the number of bits
+$$b = \lfloor \log_2 n \rfloor + 1.$$
+The value of $n$ then grows exponentially in $b$.</li>
+</ul>
+<p>Sometimes there are several parameters: for a graph, the number of vertices and the number of edges.</p>
+
+<h2 id="basic-op">Basic operation</h2>
+<p>Measuring time in seconds is inconvenient: it depends on the computer, the compiler and the quality of the program. Instead, we choose the <a data-term="basic-operation">basic operation</a>, the one that contributes the most to the running time, and count how many times it is executed. Usually it is the most time-consuming operation in the innermost loop: a key comparison in sorting and searching, a multiplication in matrix algorithms.</p>
+<p>If $c_{op}$ is the execution time of one basic operation and $C(n)$ is the number of times it is executed, then</p>
+$$T(n) \approx c_{op}\, C(n).$$
+<p>The formula is approximate, but it lets us answer questions about ratios. Let $C(n) = \tfrac12 n(n-1) \approx \tfrac12 n^2$ for large $n$. How much longer will the algorithm run on an input twice as large?</p>
+$$\frac{T(2n)}{T(n)} \approx \frac{c_{op}\cdot\tfrac12(2n)^2}{c_{op}\cdot\tfrac12 n^2} = 4.$$
+<p>Both $c_{op}$ and the factor $\tfrac12$ cancel out. This is why the analysis ignores constant multiples and concentrates only on the order of growth.</p>
+
+<h2 id="growth">Order of growth</h2>
+<p>On small inputs the difference between algorithms is barely visible. It shows up for large $n$, and it is determined by the <a data-term="order-of-growth">order of growth</a> of the function $C(n)$.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="num">$n$</th><th class="num">$\log_2 n$</th><th class="num">$n\log_2 n$</th><th class="num">$n^2$</th><th class="num">$n^3$</th><th class="num">$2^n$</th></tr></thead>
+<tbody>
+<tr><td class="num">$10$</td><td class="num">$3.3$</td><td class="num">$3.3\cdot10^1$</td><td class="num">$10^2$</td><td class="num">$10^3$</td><td class="num">$10^3$</td></tr>
+<tr><td class="num">$10^2$</td><td class="num">$6.6$</td><td class="num">$6.6\cdot10^2$</td><td class="num">$10^4$</td><td class="num">$10^6$</td><td class="num">$1.3\cdot10^{30}$</td></tr>
+<tr><td class="num">$10^3$</td><td class="num">$10$</td><td class="num">$1.0\cdot10^4$</td><td class="num">$10^6$</td><td class="num">$10^9$</td><td class="num"></td></tr>
+<tr><td class="num">$10^6$</td><td class="num">$20$</td><td class="num">$2.0\cdot10^7$</td><td class="num">$10^{12}$</td><td class="num">$10^{18}$</td><td class="num"></td></tr>
+</tbody>
+</table>
+</div>
+<p>It helps to remember how the functions react to doubling $n$: $\log_2 n$ increases by 1, $n$ doubles, $n\log n$ slightly more than doubles, $n^2$ quadruples, $n^3$ increases eightfold, and $2^n$ gets squared. Algorithms with an exponential number of operations are practical only for very small inputs. An interactive chart is in <a href="module1.html#growth">Module 1</a>.</p>
+<p>The base of the logarithm does not affect the order of growth: $\log_a n = \log_a b \cdot \log_b n$ differs from $\log_b n$ by a constant multiple. That is why we simply write $\log n$.</p>
+
+<h2 id="notation">O, Ω and Θ notations</h2>
+<p>Below, $t(n)$ is the number of operations of an algorithm and $g(n)$ is a simple function to compare with; both are nonnegative.</p>
+<div class="def">
+<p><strong>$O$ (upper bound).</strong> $t(n) \in O(g(n))$ if there exist $c > 0$ and $n_0 \ge 0$ such that $t(n) \le c\,g(n)$ for all $n \ge n_0$. More: <a data-term="big-o">O-notation</a>.</p>
+<p><strong>$\Omega$ (lower bound).</strong> $t(n) \in \Omega(g(n))$ if $t(n) \ge c\,g(n)$ for all $n \ge n_0$ for some $c > 0$, $n_0$. More: <a data-term="big-omega">Ω-notation</a>.</p>
+<p><strong>$\Theta$ (tight bound).</strong> $t(n) \in \Theta(g(n))$ if $c_2\,g(n) \le t(n) \le c_1\,g(n)$ for all $n \ge n_0$. More: <a data-term="big-theta">Θ-notation</a>.</p>
+</div>
+<figure>
+<svg viewBox="0 0 520 200" role="img" aria-label="The function t(n) is bounded between c2·g(n) and c1·g(n) starting from n0" style="max-width:520px;width:100%">
+  <line x1="40" y1="175" x2="505" y2="175" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="40" y1="175" x2="40" y2="12" stroke="var(--muted)" stroke-width="1"/>
+  <path d="M40,160 C180,140 330,80 500,22" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <path d="M40,170 C180,160 330,128 500,96" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <path d="M40,120 C80,175 120,110 160,150 C230,140 330,100 500,55" fill="none" stroke="var(--fg)" stroke-width="2"/>
+  <line x1="160" y1="175" x2="160" y2="20" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="160" y="192" text-anchor="middle" font-size="12" class="muted-text">n₀</text>
+  <text x="498" y="16" text-anchor="end" font-size="12">c₁·g(n)</text>
+  <text x="498" y="115" text-anchor="end" font-size="12">c₂·g(n)</text>
+  <text x="498" y="70" text-anchor="end" font-size="12">t(n)</text>
+  <text x="100" y="30" text-anchor="middle" font-size="11" class="muted-text">before n₀: doesn't matter</text>
+</svg>
+<figcaption>$t(n) \in \Theta(g(n))$: starting from $n_0$, the function is bounded between $c_2 g(n)$ and $c_1 g(n)$.</figcaption>
+</figure>
+<p>How not to mix them up: $O$ means “grows no faster”, $\Omega$ means “grows no slower”, $\Theta$ means “grows at the same rate”. $\Theta$ means $O$ and $\Omega$ at the same time. Example for $t(n) = 3n^2 + 5$:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th></th><th>$g(n) = n$</th><th>$g(n) = n^2$</th><th>$g(n) = n^3$</th></tr></thead>
+<tbody>
+<tr><td>$t \in O(g)$?</td><td>no</td><td>yes</td><td>yes</td></tr>
+<tr><td>$t \in \Omega(g)$?</td><td>yes</td><td>yes</td><td>no</td></tr>
+<tr><td>$t \in \Theta(g)$?</td><td>no</td><td>yes</td><td>no</td></tr>
+</tbody>
+</table>
+</div>
+<p>So the statement $3n^2 + 5 \in O(n^3)$ is true but not very informative; the precise answer is $\Theta(n^2)$. In the worked examples we look for $\Theta$.</p>
+<p>An example of a proof by definition: $\tfrac12 n(n-1) \in \Theta(n^2)$. Upper bound: $\tfrac12 n^2 - \tfrac12 n \le \tfrac12 n^2$ for $n \ge 0$. Lower bound: for $n \ge 2$ we have $\tfrac12 n \le \tfrac14 n^2$, hence $\tfrac12 n^2 - \tfrac12 n \ge \tfrac14 n^2$. The values $c_1 = \tfrac12$, $c_2 = \tfrac14$, $n_0 = 2$ work.</p>
+<p>In practice it is more convenient to compare using a limit:</p>
+$$\lim_{n\to\infty}\frac{t(n)}{g(n)} = \begin{cases} 0 & t \text{ grows slower: } t \in O(g),\\ c > 0 & \text{same order: } t \in \Theta(g),\\ \infty & t \text{ grows faster: } t \in \Omega(g).\end{cases}$$
+<p>If an algorithm consists of two consecutively executed parts, its overall order is determined by the part with the higher order of growth:</p>
+$$t_1 \in O(g_1),\ t_2 \in O(g_2) \ \Rightarrow\ t_1 + t_2 \in O(\max\{g_1, g_2\}).$$
+
+<h2 id="cases">Worst, best and average cases</h2>
+<p>For many algorithms the number of operations depends not only on $n$ but also on the particular input. The classic example is sequential search for a key $K$:</p>
+<pre class="pseudo">ALGORITHM SequentialSearch(A[0..n − 1], K)
+//Searches for K in an array; returns the index of the first match or −1
+i ← 0
+while i < n and A[i] ≠ K do
+    i ← i + 1
+if i < n return i
+else return −1</pre>
+<ul>
+<li><a data-term="worst-case">Worst case</a>: an input of size $n$ for which the number of operations is the largest. Here the key is absent or its first occurrence is in the last position: $C_{worst}(n) = n$. The worst-case efficiency is a guarantee: there will never be more than $n$ comparisons.</li>
+<li><a data-term="best-case">Best case</a>: an input of size $n$ for which the number of operations is the smallest. Here the key is first: $C_{best}(n) = 1$. The best case is <strong>not a small input</strong>: the size $n$ is fixed, only the contents are chosen.</li>
+<li><a data-term="average-case">Average case</a>: the expected number of operations on a “random” input. It requires explicit probabilistic assumptions. It is <strong>not equal</strong> to the arithmetic mean of the worst and best cases. The full derivation for sequential search is in <a href="module1.html#average">Module 1</a>.</li>
+</ul>
+<p>If the number of operations is the same for all inputs of size $n$ (as when finding the maximum), the three cases coincide and are not distinguished.</p>
+
+<h2 id="next">What's next</h2>
+<p><a href="module1.html">Module 1</a> teaches how to count operations in algorithms with loops: the number of operations is expressed as a sum. <a href="module2.html">Module 2</a> covers recursive algorithms: the number of operations is expressed by a recurrence relation. Both modules use the same five-step plan.</p>
+
+<h2 id="entry-quiz">Entry quiz</h2>
+<p>Five questions on what you need to know before the modules. After you pick an option, explanations for all options appear.</p>
+<div data-quiz="intro" class="quiz"></div>
+</main>
+</div>
+</body>
+</html>

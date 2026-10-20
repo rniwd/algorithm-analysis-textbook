@@ -1,7 +1,7 @@
 /* Визуализации модуля 1: сетка пар UniqueElements, цикл i ← 2i, график роста, средний случай поиска */
 (function () {
   "use strict";
-  var V = window.Viz, svg = V.svg, html = V.html;
+  var V = window.Viz, svg = V.svg, html = V.html, T = V.T;
 
   // ---------- сетка пар (i, j) для UniqueElements ----------
   function pairs(root) {
@@ -12,8 +12,8 @@
     var controls = html("div", { class: "viz-controls" }, root);
     var lab = html("label", null, controls);
     lab.appendChild(document.createTextNode("n ="));
-    var inp = html("input", { type: "number", min: 2, max: 14, value: n, "aria-label": "Размер массива" }, lab);
-    var bCase = html("button", { type: "button", "aria-pressed": "false" }, controls, "вход A[0] = A[1]");
+    var inp = html("input", { type: "number", min: 2, max: 14, value: n, "aria-label": T("Размер массива", "Array size") }, lab);
+    var bCase = html("button", { type: "button", "aria-pressed": "false" }, controls, T("вход A[0] = A[1]", "input A[0] = A[1]"));
     var ctl = html("span", { style: "display:contents" }, controls);
     var cells = [], order = [];
 
@@ -21,7 +21,7 @@
       box.innerHTML = "";
       cells = []; order = [];
       var c = 26, pad = 30, size = pad + n * c + 4;
-      var s = svg("svg", { viewBox: "0 0 " + size + " " + size, role: "img", "aria-label": "Сетка пар индексов i и j" }, box);
+      var s = svg("svg", { viewBox: "0 0 " + size + " " + size, role: "img", "aria-label": T("Сетка пар индексов i и j", "Grid of index pairs i and j") }, box);
       s.style.maxWidth = Math.min(420, size * 1.4) + "px";
       s.style.margin = "0 auto";
       var ti = svg("text", { x: 4, y: pad - 10, "font-size": 11, class: "muted-text" }, s); ti.textContent = "i \\ j";
@@ -45,10 +45,10 @@
         cells[p[0]][p[1]].setAttribute("fill", cur ? "var(--accent)" : on ? "var(--accent-mid)" : "var(--surface)");
       });
       var w = n * (n - 1) / 2;
-      var txt = "Сравнений: <b>" + k + "</b>";
-      if (k > 0) txt += " &nbsp;·&nbsp; сейчас A[" + order[k - 1][0] + "] = A[" + order[k - 1][1] + "]?";
-      if (best) txt += k === 1 ? " — да, равны: return false. C<sub>best</sub>(" + n + ") = 1." : " &nbsp;·&nbsp; в A[0] и A[1] одинаковые значения";
-      else txt += " &nbsp;·&nbsp; n(n − 1)/2 = " + n + "·" + (n - 1) + "/2 = <b>" + w + "</b>" + (k === w ? " — все пары выше диагонали проверены" : "");
+      var txt = T("Сравнений: <b>", "Comparisons: <b>") + k + "</b>";
+      if (k > 0) txt += T(" &nbsp;·&nbsp; сейчас A[", " &nbsp;·&nbsp; now A[") + order[k - 1][0] + "] = A[" + order[k - 1][1] + "]?";
+      if (best) txt += k === 1 ? T(" — да, равны: return false. C<sub>best</sub>(", " — equal: return false. C<sub>best</sub>(") + n + ") = 1." : T(" &nbsp;·&nbsp; в A[0] и A[1] одинаковые значения", " &nbsp;·&nbsp; A[0] and A[1] hold equal values");
+      else txt += " &nbsp;·&nbsp; n(n − 1)/2 = " + n + "·" + (n - 1) + "/2 = <b>" + w + "</b>" + (k === w ? T(" — все пары выше диагонали проверены", " — all pairs above the diagonal checked") : "");
       status.innerHTML = txt;
     }
     var player = new V.Player({ controls: ctl, total: total, render: render, speed: 260 });
@@ -67,10 +67,10 @@
     var controls = html("div", { class: "viz-controls" }, root);
     var lab = html("label", null, controls);
     lab.appendChild(document.createTextNode("n ="));
-    var inp = html("input", { type: "number", min: 1, max: 1000, value: n, "aria-label": "Значение n" }, lab);
+    var inp = html("input", { type: "number", min: 1, max: 1000, value: n, "aria-label": T("Значение n", "Value of n") }, lab);
     var ctl = html("span", { style: "display:contents" }, controls);
     var W = 600, H = 120, x0 = 20, x1 = W - 20, axisY = 80, marks = [];
-    var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Числовая ось от 1 до n со скачками i ← 2i" }, box);
+    var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": T("Числовая ось от 1 до n со скачками i ← 2i", "Number line from 1 to n with jumps i ← 2i") }, box);
 
     function X(v) { return x0 + (x1 - x0) * (v - 1) / Math.max(1, n - 1 || 1); }
     function build() {
@@ -98,9 +98,9 @@
     function render(k) {
       marks.forEach(function (g, idx) { g.setAttribute("opacity", idx < k ? 1 : 0.18); });
       var L = V.floorLog2(n);
-      var txt = "Выполнено итераций: <b>" + k + "</b>";
+      var txt = T("Выполнено итераций: <b>", "Iterations done: <b>") + k + "</b>";
       if (k > 0) txt += " &nbsp;·&nbsp; i = " + values[k - 1];
-      if (k === values.length) txt += " &nbsp;·&nbsp; следующее i = " + values[k - 1] * 2 + " > n, выход. Итого ⌊log₂ " + n + "⌋ + 1 = " + L + " + 1 = <b>" + (L + 1) + "</b>";
+      if (k === values.length) txt += T(" &nbsp;·&nbsp; следующее i = ", " &nbsp;·&nbsp; next i = ") + values[k - 1] * 2 + T(" > n, выход. Итого ⌊log₂ ", " > n, exit. Total ⌊log₂ ") + n + "⌋ + 1 = " + L + " + 1 = <b>" + (L + 1) + "</b>";
       status.innerHTML = txt;
     }
     var player = new V.Player({ controls: ctl, total: function () { return values.length; }, render: render, speed: 650 });
@@ -121,15 +121,15 @@
     ];
     var nMax = 20, logScale = false;
     var stage = html("div", { class: "viz-stage" }, root);
-    var legend = html("div", { class: "legend", role: "group", "aria-label": "Функции на графике" }, stage);
+    var legend = html("div", { class: "legend", role: "group", "aria-label": T("Функции на графике", "Functions on the chart") }, stage);
     var box = html("div", null, stage);
     var status = html("div", { class: "viz-status" }, stage);
     var controls = html("div", { class: "viz-controls" }, root);
     var lab = html("label", null, controls);
-    lab.appendChild(document.createTextNode("n до"));
-    var rng = html("input", { type: "range", min: 4, max: 64, value: nMax, "aria-label": "Правая граница по n" }, lab);
+    lab.appendChild(document.createTextNode(T("n до", "n up to")));
+    var rng = html("input", { type: "range", min: 4, max: 64, value: nMax, "aria-label": T("Правая граница по n", "Right bound for n") }, lab);
     var nOut = html("b", null, lab, String(nMax));
-    var bLog = html("button", { type: "button", "aria-pressed": "false" }, controls, "логарифмическая шкала");
+    var bLog = html("button", { type: "button", "aria-pressed": "false" }, controls, T("логарифмическая шкала", "log scale"));
 
     var dashes = ["", "6 4", "2 3", "", "8 3 2 3", "1 0"];
     var widths = [1.6, 1.6, 1.6, 2.4, 1.6, 2.4];
@@ -143,8 +143,8 @@
       l.appendChild(document.createTextNode(fn.name));
       cb.addEventListener("change", function () { fn.on = cb.checked; draw(); });
     });
-    var W = 600, H = 330, L = 56, Rr = 16, T = 14, B = 34;
-    var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "График роста функций" }, box);
+    var W = 600, H = 330, L = 56, Rr = 16, Tp = 14, B = 34;
+    var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": T("График роста функций", "Growth of functions chart") }, box);
 
     function draw() {
       s.innerHTML = "";
@@ -155,9 +155,9 @@
       var Y = function (v) {
         if (logScale) {
           var lv = Math.log10(Math.max(v, ymin)), a = Math.log10(ymin), b = Math.log10(ymax);
-          return H - B - (H - B - T) * (lv - a) / (b - a);
+          return H - B - (H - B - Tp) * (lv - a) / (b - a);
         }
-        return H - B - (H - B - T) * v / ymax;
+        return H - B - (H - B - Tp) * v / ymax;
       };
       var X = function (n) { return L + (W - L - Rr) * (n - 1) / (nMax - 1); };
       // оси и сетка
@@ -179,7 +179,7 @@
       svg("line", { x1: L, y1: H - B, x2: W - Rr, y2: H - B, stroke: "var(--muted)", "stroke-width": 1 }, s);
       // кривые
       var clip = svg("clipPath", { id: "gclip" + uid }, svg("defs", null, s));
-      svg("rect", { x: L, y: T - 2, width: W - L - Rr, height: H - B - T + 2 }, clip);
+      svg("rect", { x: L, y: Tp - 2, width: W - L - Rr, height: H - B - Tp + 2 }, clip);
       var labels = [];
       FUNCS.forEach(function (f, i) {
         if (!f.on) return;
@@ -189,7 +189,7 @@
           d += (k ? "L" : "M") + X(nn).toFixed(1) + "," + Y(f.f(nn)).toFixed(1);
         }
         svg("path", { d: d, fill: "none", stroke: i >= 4 ? "var(--fg)" : "var(--accent)", "stroke-width": widths[i], "stroke-dasharray": dashes[i], opacity: opac[i], "clip-path": "url(#gclip" + uid + ")" }, s);
-        var yEnd = Math.max(T + 8, Y(f.f(nMax)));
+        var yEnd = Math.max(Tp + 8, Y(f.f(nMax)));
         labels.push({ y: yEnd, name: f.name });
       });
       // подписи справа без наложений
@@ -200,7 +200,7 @@
         t.textContent = lb.name;
       });
       var f = function (g) { return fmt(g(nMax)); };
-      status.innerHTML = "При n = " + nMax + ": log₂ n ≈ " + f(FUNCS[0].f) + ", n log₂ n ≈ " + f(FUNCS[2].f) + ", n² = " + f(FUNCS[3].f) + ", n³ = " + f(FUNCS[4].f) + ", 2ⁿ ≈ " + f(FUNCS[5].f);
+      status.innerHTML = T("При n = ", "For n = ") + nMax + ": log₂ n ≈ " + f(FUNCS[0].f) + ", n log₂ n ≈ " + f(FUNCS[2].f) + ", n² = " + f(FUNCS[3].f) + ", n³ = " + f(FUNCS[4].f) + ", 2ⁿ ≈ " + f(FUNCS[5].f);
     }
     var uid = Math.random().toString(36).slice(2, 7);
     function niceStep(x) {
@@ -208,9 +208,9 @@
       return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p;
     }
     function fmt(v) {
-      if (v >= 1e6) { var e = Math.floor(Math.log10(v)); return (v / Math.pow(10, e)).toFixed(1).replace(".", ",") + "·10" + supNum(e); }
-      if (v >= 100 || Number.isInteger(v)) return Math.round(v).toLocaleString("ru-RU");
-      return v.toFixed(1).replace(".", ",");
+      if (v >= 1e6) { var e = Math.floor(Math.log10(v)); return V.num(v / Math.pow(10, e), 1) + "·10" + supNum(e); }
+      if (v >= 100 || Number.isInteger(v)) return Math.round(v).toLocaleString(V.EN ? "en-US" : "ru-RU");
+      return V.num(v, 1);
     }
     function supNum(e) { return String(e).split("").map(function (c) { return "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]; }).join(""); }
     rng.addEventListener("input", function () { nMax = +rng.value; nOut.textContent = nMax; draw(); });
@@ -226,15 +226,15 @@
     var controls = html("div", { class: "viz-controls" }, root);
     var labN = html("label", null, controls);
     labN.appendChild(document.createTextNode("n ="));
-    var inN = html("input", { type: "number", min: 1, max: 500, value: 20, "aria-label": "Размер массива" }, labN);
+    var inN = html("input", { type: "number", min: 1, max: 500, value: 20, "aria-label": T("Размер массива", "Array size") }, labN);
     var labP = html("label", null, controls);
     labP.appendChild(document.createTextNode("p ="));
-    var inP = html("input", { type: "range", min: 0, max: 100, value: 50, "aria-label": "Вероятность успешного поиска" }, labP);
-    var pOut = html("b", null, labP, "0,50");
-    var bRun = html("button", { type: "button", class: "primary" }, controls, "1000 запусков");
-    var bClear = html("button", { type: "button" }, controls, "сброс");
+    var inP = html("input", { type: "range", min: 0, max: 100, value: 50, "aria-label": T("Вероятность успешного поиска", "Probability of a successful search") }, labP);
+    var pOut = html("b", null, labP, V.num(0.5, 2));
+    var bRun = html("button", { type: "button", class: "primary" }, controls, T("1000 запусков", "1000 runs"));
+    var bClear = html("button", { type: "button" }, controls, T("сброс", "reset"));
     var W = 600, H = 150, sum = 0, runs = 0, hist = [];
-    var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Распределение числа сравнений" }, box);
+    var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": T("Распределение числа сравнений", "Distribution of the number of comparisons") }, box);
 
     function params() { return { n: Math.max(1, Math.min(500, Math.floor(+inN.value) || 20)), p: +inP.value / 100 }; }
     function formula(q) { return q.p * (q.n + 1) / 2 + q.n * (1 - q.p); }
@@ -250,12 +250,12 @@
       svg("line", { x1: 20, y1: H - 24, x2: W - 20, y2: H - 24, stroke: "var(--line)" }, s);
       var fx = 20 + (formula(q) - 0.5) * bw;
       svg("line", { x1: fx, y1: 10, x2: fx, y2: H - 24, stroke: "var(--fg)", "stroke-dasharray": "4 3" }, s);
-      var t = svg("text", { x: Math.min(W - 80, fx + 4), y: 20, "font-size": 11 }, s); t.textContent = "формула";
-      var t1 = svg("text", { x: 20, y: H - 8, "font-size": 11, class: "muted-text" }, s); t1.textContent = "1 сравнение";
-      var t2 = svg("text", { x: W - 20, y: H - 8, "font-size": 11, "text-anchor": "end", class: "muted-text" }, s); t2.textContent = q.n + " сравнений";
+      var t = svg("text", { x: Math.min(W - 80, fx + 4), y: 20, "font-size": 11 }, s); t.textContent = T("формула", "formula");
+      var t1 = svg("text", { x: 20, y: H - 8, "font-size": 11, class: "muted-text" }, s); t1.textContent = T("1 сравнение", "1 comparison");
+      var t2 = svg("text", { x: W - 20, y: H - 8, "font-size": 11, "text-anchor": "end", class: "muted-text" }, s); t2.textContent = q.n + T(" сравнений", " comparisons");
       var avg = runs ? (sum / runs) : null;
-      status.innerHTML = "Формула: p(n+1)/2 + n(1−p) = <b>" + formula(q).toFixed(2).replace(".", ",") + "</b>" +
-        (runs ? " &nbsp;·&nbsp; опыт (" + runs + " запусков): <b>" + avg.toFixed(2).replace(".", ",") + "</b>" : " &nbsp;·&nbsp; запусков пока нет");
+      status.innerHTML = T("Формула", "Formula") + ": p(n+1)/2 + n(1−p) = <b>" + V.num(formula(q), 2) + "</b>" +
+        (runs ? T(" &nbsp;·&nbsp; опыт (", " &nbsp;·&nbsp; experiment (") + runs + T(" запусков): <b>", " runs): <b>") + V.num(avg, 2) + "</b>" : T(" &nbsp;·&nbsp; запусков пока нет", " &nbsp;·&nbsp; no runs yet"));
     }
     function run() {
       var q = params();
@@ -268,7 +268,7 @@
       }
       draw();
     }
-    function clear() { sum = 0; runs = 0; hist = []; pOut.textContent = (+inP.value / 100).toFixed(2).replace(".", ","); draw(); }
+    function clear() { sum = 0; runs = 0; hist = []; pOut.textContent = V.num(+inP.value / 100, 2); draw(); }
     bRun.addEventListener("click", run);
     bClear.addEventListener("click", clear);
     inN.addEventListener("change", clear);

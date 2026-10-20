@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3AM — An E-Textbook on Algorithm Analysis</title>
+<meta name="description" content="An e-textbook for bachelor students: mathematical analysis of nonrecursive and recursive algorithms following Levitin, §2.3–2.5.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../data/en/glossary.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="index">
+<div class="layout single">
+<main class="wide">
+<section class="cover">
+<p class="kicker">3AM · an e-textbook for bachelor students</p>
+<h1>Analysis of Algorithm Efficiency</h1>
+<p class="lead">How to count the operations an algorithm with loops or recursion performs, and how to obtain an exact formula and an efficiency class. Based on A. Levitin's “Introduction to the Design and Analysis of Algorithms”, §2.3–2.5.</p>
+<div class="stats">
+<div><b>2</b>modules and an introduction</div>
+<div><b>25</b>quiz questions</div>
+<div><b>26</b>problems with solutions</div>
+<div><b>8</b>interactive models</div>
+</div>
+<p class="meta">Authors: Калжан Ақниет, Кеңес Маржан, Абильмажитова Алина, Алтыбаева Аружан &nbsp;·&nbsp; Independent project “E-Textbook on Algorithm Analysis”</p>
+</section>
+
+<h2 id="how">How to use</h2>
+<p>Read in order: introduction → Module 1 → Module 2. Each module starts with learning goals, followed by theory and worked examples following the general plan, interactive models, a quiz and problems of three levels. A module ends with a summary and a formula cheat sheet. Terms underlined with a dotted line lead to the <a href="glossary.html">glossary</a>; hovering shows a short definition. You can link to any section and any problem: use the # sign next to the heading.</p>
+
+<h2 id="contents">Contents</h2>
+<ol class="toc-big">
+<li>
+<a class="t" href="intro.html">Introduction: how to measure efficiency</a>
+<div class="d">A review of the basics before the modules. A 5-question entry quiz.</div>
+<ul>
+<li><a href="intro.html#size">Input size</a></li>
+<li><a href="intro.html#basic-op">Basic operation</a></li>
+<li><a href="intro.html#growth">Order of growth</a></li>
+<li><a href="intro.html#notation">O, Ω, Θ</a></li>
+<li><a href="intro.html#cases">Worst, best, average cases</a></li>
+<li><a href="intro.html#entry-quiz">Entry quiz</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="module1.html">Module 1. Analysis of Nonrecursive Algorithms</a>
+<div class="d">Lecture 4, Levitin §2.3, 2.1, 2.6, Appendix A. Loops turn into sums.</div>
+<ul>
+<li><a href="module1.html#goals">Goals</a></li>
+<li><a href="module1.html#plan">The 5-step plan</a></li>
+<li><a href="module1.html#sums">Sums</a></li>
+<li><a href="module1.html#max-element">MaxElement</a></li>
+<li><a href="module1.html#unique">UniqueElements</a></li>
+<li><a href="module1.html#matrix">Matrices</a></li>
+<li><a href="module1.html#dependent">Dependent bound</a></li>
+<li><a href="module1.html#multiplicative">Multiplicative loop</a></li>
+<li><a href="module1.html#own-diagonal">Sum above the diagonal</a></li>
+<li><a href="module1.html#own-selection">Selection sort</a></li>
+<li><a href="module1.html#average">Average case</a></li>
+<li><a href="module1.html#mistakes">Common mistakes</a></li>
+<li><a href="module1.html#growth">Growth chart</a></li>
+<li><a href="module1.html#empirical">Empirical check</a></li>
+<li><a href="module1.html#quiz">Quiz</a></li>
+<li><a href="module1.html#tasks">Problems</a></li>
+<li><a href="module1.html#cheatsheet">Cheat sheet</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="module2.html">Module 2. Analysis of Recursive Algorithms</a>
+<div class="d">Lecture 5, Levitin §2.4–2.5, Appendix B, §8.2. Recursion turns into a recurrence relation.</div>
+<ul>
+<li><a href="module2.html#goals">Goals</a></li>
+<li><a href="module2.html#plan">Plan and recurrences</a></li>
+<li><a href="module2.html#backward">Backward substitutions</a></li>
+<li><a href="module2.html#induction">Induction</a></li>
+<li><a href="module2.html#factorial">Factorial</a></li>
+<li><a href="module2.html#hanoi">Tower of Hanoi</a></li>
+<li><a href="module2.html#binrec">BinRec</a></li>
+<li><a href="module2.html#fibonacci">Fibonacci</a></li>
+<li><a href="module2.html#recursion-vs-iteration">Recursion and iteration</a></li>
+<li><a href="module2.html#own-maxdc">Maximum by halves</a></li>
+<li><a href="module2.html#own-power">Fast exponentiation</a></li>
+<li><a href="module2.html#empirical">Empirical check</a></li>
+<li><a href="module2.html#quiz">Quiz</a></li>
+<li><a href="module2.html#tasks">Problems</a></li>
+<li><a href="module2.html#cheatsheet">Cheat sheet</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="glossary.html">Glossary</a>
+<div class="d">Key terms with definitions and links to sections.</div>
+</li>
+<li>
+<a class="t" href="sources.html">Sources</a>
+<div class="d">References, program code for the empirical part, tools used.</div>
+</li>
+</ol>
+</main>
+</div>
+</body>
+</html>

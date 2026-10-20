@@ -2,7 +2,9 @@
 (function () {
   "use strict";
 
-  var LEVEL_NAMES = { A: "A", B: "B", C: "C", F: "Найди ошибку", E: "Эмпирическая" };
+  var EN = document.documentElement.lang === "en";
+  function T(ru, en) { return EN ? en : ru; }
+  var LEVEL_NAMES = { A: "A", B: "B", C: "C", F: T("Найди ошибку", "Find the mistake"), E: T("Эмпирическая", "Empirical") };
 
   function store(key, value) {
     try {
@@ -18,8 +20,8 @@
   function renderQuiz(box) {
     var key = box.getAttribute("data-quiz");
     var quiz = (window.QUIZ || {})[key];
-    if (!quiz) { box.textContent = "Квиз не найден: " + key; return; }
-    var skey = "quiz:" + key;
+    if (!quiz) { box.textContent = T("Квиз не найден: ", "Quiz not found: ") + key; return; }
+    var skey = "quiz:" + (EN ? "en:" : "") + key;
     var state = store(skey) || {};
     var total = quiz.length;
 
@@ -57,7 +59,7 @@
 
     var foot = document.createElement("div");
     foot.className = "quiz-foot";
-    foot.innerHTML = '<span class="quiz-score" aria-live="polite"></span><button type="button" class="reset">Пройти заново</button>';
+    foot.innerHTML = '<span class="quiz-score" aria-live="polite"></span><button type="button" class="reset">' + T("Пройти заново", "Start over") + "</button>";
     box.appendChild(foot);
     var scoreEl = foot.querySelector(".quiz-score");
     foot.querySelector(".reset").addEventListener("click", function () {
@@ -82,8 +84,8 @@
           if (q.options[state[q.id]] && q.options[state[q.id]].ok) correct++;
         }
       });
-      if (answered === total) scoreEl.textContent = "Результат: " + correct + " из " + total;
-      else scoreEl.textContent = "Отвечено " + answered + " из " + total + ", верно " + correct;
+      if (answered === total) scoreEl.textContent = T("Результат: ", "Score: ") + correct + T(" из ", " of ") + total;
+      else scoreEl.textContent = T("Отвечено ", "Answered ") + answered + T(" из ", " of ") + total + T(", верно ", ", correct ") + correct;
       box.setAttribute("data-score", correct);
       box.setAttribute("data-answered", answered);
     }
@@ -116,7 +118,7 @@
       st.className = "statement";
       st.innerHTML = t.text;
       art.appendChild(st);
-      [["hint", "Подсказка"], ["answer", "Ответ"], ["solution", "Полное решение"]].forEach(function (p) {
+      [["hint", T("Подсказка", "Hint")], ["answer", T("Ответ", "Answer")], ["solution", T("Полное решение", "Full solution")]].forEach(function (p) {
         var d = document.createElement("details");
         d.id = t.id + "-" + p[0];
         d.innerHTML = "<summary>" + p[1] + '</summary><div class="body">' + t[p[0]] + "</div>";
