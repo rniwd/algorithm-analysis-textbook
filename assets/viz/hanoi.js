@@ -63,9 +63,10 @@
     var diskEls = [];
     var status = html("div", { class: "viz-status" }, left);
 
-    var treeTitle = html("p", { class: "panel-title" }, right, "Дерево рекурсивных вызовов");
-    var treeBox = html("div", null, right);
-    var stackTitle = html("p", { class: "panel-title", style: "margin-top:0.8rem" }, right, "Стек вызовов");
+    var treeStage = html("div", { class: "viz-stage", style: "margin-top:1rem" }, root);
+    var treeTitle = html("p", { class: "panel-title" }, treeStage, "Дерево рекурсивных вызовов");
+    var treeBox = html("div", null, treeStage);
+    var stackTitle = html("p", { class: "panel-title" }, right, "Стек вызовов");
     var stackBox = html("div", { class: "stack-panel", "aria-live": "off" }, right);
     var stackNote = html("div", { class: "viz-status" }, right);
 
@@ -131,7 +132,8 @@
       var cnt = data.nodes.length, gap = Math.max(22, Math.min(46, 300 / cnt * 1.6));
       var w = cnt * gap + 10, levelH = 44, h = n * levelH + 10, rad = n >= 5 ? 9 : 11;
       var s = svg("svg", { viewBox: "0 0 " + w + " " + h, role: "img", "aria-label": "Дерево вызовов: узел подписан числом дисков" }, treeBox);
-      if (n <= 2) s.style.maxWidth = "220px";
+      s.style.maxWidth = Math.min(w * 1.25, 760) + "px";
+      s.style.margin = "0 auto";
       var x = function (nd) { return 5 + (nd.move - 0.5) * gap; };
       var y = function (nd) { return 16 + nd.depth * levelH; };
       var edges = svg("g", null, s);
@@ -192,7 +194,7 @@
       diskLayer.innerHTML = "";
       diskEls = [];
       for (var d = 1; d <= n; d++) {
-        var w = 30 + (d - 1) * (88 / Math.max(1, 7));
+        var w = 28 + (d - 1) * (90 / Math.max(1, n - 1));
         var r = svg("rect", { x: -w / 2, y: 0, width: w, height: diskH - 2, rx: 4, fill: "var(--accent)", "fill-opacity": 0.25 + 0.75 * d / n, stroke: "var(--accent)", "stroke-width": 1 }, diskLayer);
         r.style.transition = "transform 0.25s ease";
         r.dataset.disk = d;
@@ -245,6 +247,7 @@
 
     function setN(v) {
       n = v;
+      nSel.value = String(n);
       data = trace(n);
       buildDisks();
       buildTree();
@@ -373,7 +376,10 @@
       bUser.setAttribute("aria-pressed", m === "user");
       algoCtl.style.display = m === "algo" ? "contents" : "none";
       userCtl.style.display = m === "user" ? "contents" : "none";
-      right.style.display = m === "algo" ? "" : "none";
+      right.style.display = treeStage.style.display = m === "algo" ? "" : "none";
+      grid.style.gridTemplateColumns = m === "algo" ? "" : "minmax(0, 1fr)";
+      board.style.maxWidth = m === "algo" ? "" : "560px";
+      board.style.margin = m === "algo" ? "" : "0 auto";
       board.style.cursor = m === "user" ? "grab" : "";
       board.style.touchAction = m === "user" ? "none" : "";
       if (m === "algo") { player.pause(); placeDisks(pegsAt(0), true); player.go(0); }

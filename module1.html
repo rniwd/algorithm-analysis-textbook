@@ -6,6 +6,7 @@
 <title>Модуль 1. Нерекурсивные алгоритмы — Анализ алгоритмов</title>
 <meta name="description" content="Математический анализ нерекурсивных алгоритмов: план из пяти шагов, суммы, разборы, средний случай, типичные ошибки, эмпирическая проверка.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="assets/style.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -107,7 +108,7 @@ return true</pre>
 Тогда сравнение выполняется для каждого $j$ от $i+1$ до $n-1$ и каждого $i$ от $0$ до $n-2$:
 $$C_{worst}(n) = \sum_{i=0}^{n-2}\sum_{j=i+1}^{n-1} 1.$$</div></div>
 <div><span class="k">5. Решение</span><div class="v">
-$$C_{worst}(n) = \sum_{i=0}^{n-2}(n-1-i) = \sum_{i=0}^{n-2}(n-1) - \sum_{i=0}^{n-2} i = (n-1)^2 - \frac{(n-2)(n-1)}{2} = \frac{(n-1)n}{2}.$$
+$$\begin{aligned} C_{worst}(n) &= \sum_{i=0}^{n-2}(n-1-i) = \sum_{i=0}^{n-2}(n-1) - \sum_{i=0}^{n-2} i \\ &= (n-1)^2 - \frac{(n-2)(n-1)}{2} = \frac{(n-1)n}{2}. \end{aligned}$$
 Короче: $(n-1) + (n-2) + \dots + 1 = \frac{(n-1)n}{2}$ по (S2). Результат предсказуем: в худшем случае нужно сравнить все $\binom{n}{2} = \frac{n(n-1)}{2}$ различных пар.</div></div>
 <div><span class="k">Класс</span><div class="v">$C_{worst}(n) = \frac{n(n-1)}{2} \approx \frac12 n^2 \in \Theta(n^2)$.</div></div>
 </div>
@@ -309,23 +310,23 @@ for n in [2, 5, 10, 50, 100, 400]:
     print(n, c, n * (n - 1) // 2, c == n * (n - 1) // 2)</code></pre>
 <p>Полный набор скриптов — в папке <code>code/</code> (см. <a href="sources.html#code">описание</a>). Каждый печатает таблицу «$n$ | счётчик | формула | совпадает» и строит график. Результаты:</p>
 <figure>
-<img src="assets/img/emp-unique-elements.svg" alt="UniqueElements: счётчик сравнений совпадает с n(n−1)/2 в худшем случае и равен 1 в лучшем" loading="lazy">
+<img src="assets/img/emp-unique-elements.svg" alt="UniqueElements: счётчик сравнений совпадает с n(n−1)/2 в худшем случае и равен 1 в лучшем">
 <figcaption>UniqueElements: оба вида худших входов дают ровно $\frac{n(n-1)}{2}$ (точки на пунктире формулы), лучший случай $A[0] = A[1]$ — одно сравнение при любом $n$.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-binary.svg" alt="Binary: число сравнений n > 1 ступенчато растёт как floor(log2 n) + 1" loading="lazy">
+<img src="assets/img/emp-binary.svg" alt="Binary: число сравнений n > 1 ступенчато растёт как floor(log2 n) + 1">
 <figcaption>Binary: ступеньки высотой 1 на каждой степени двойки, проверено для всех $n$ от 1 до 5000 — $\lfloor\log_2 n\rfloor + 1$ без единого расхождения.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-seq-search.svg" alt="Последовательный поиск: среднее число сравнений при n = 100 в зависимости от p совпадает с формулой" loading="lazy">
+<img src="assets/img/emp-seq-search.svg" alt="Последовательный поиск: среднее число сравнений при n = 100 в зависимости от p совпадает с формулой">
 <figcaption>Последовательный поиск, $n = 100$, 20 000 запусков на каждое $p$: опыт $100{,}0$; $87{,}4$; $75{,}2$; $62{,}7$; $50{,}3$ против формулы $100$; $87{,}6$; $75{,}25$; $62{,}9$; $50{,}5$. Расхождение меньше 0,5 %.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-selection-sort.svg" alt="Сортировка выбором: сравнения n(n−1)/2" loading="lazy">
+<img src="assets/img/emp-selection-sort.svg" alt="Сортировка выбором: сравнения n(n−1)/2">
 <figcaption>Сортировка выбором: сравнений ровно $\frac{n(n-1)}{2}$ на любых входах; обменов $n - 1$.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-nlogn.svg" alt="Вложенный цикл с удвоением: n(floor(log2 n)+1)" loading="lazy">
+<img src="assets/img/emp-nlogn.svg" alt="Вложенный цикл с удвоением: n(floor(log2 n)+1)">
 <figcaption>Линейный цикл с удвоением внутри: $n(\lfloor\log_2 n\rfloor + 1)$ совпадает со счётчиком.</figcaption>
 </figure>
 <p><strong>Выводы.</strong> Для MaxElement, UniqueElements, перемножения матриц, Binary, сортировки выбором, суммы над диагональю и циклов с зависимой границей счётчик совпал с формулой при всех проверенных $n$. Средний случай поиска совпал в пределах статистической погрешности. Опыт подтвердил и то, что у MaxElement число присваиваний меняется от входа к входу (999, 0 и 8 при $n = 1000$ для возрастающего, убывающего и случайного массивов), а число сравнений — нет. Это эмпирическое обоснование выбора базовой операции.</p>

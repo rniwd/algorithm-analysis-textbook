@@ -208,7 +208,7 @@
       return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p;
     }
     function fmt(v) {
-      if (v >= 1e6) { var e = Math.floor(Math.log10(v)); return (v / Math.pow(10, e)).toFixed(1).replace(".0", "") + "·10" + supNum(e); }
+      if (v >= 1e6) { var e = Math.floor(Math.log10(v)); return (v / Math.pow(10, e)).toFixed(1).replace(".", ",") + "·10" + supNum(e); }
       if (v >= 100 || Number.isInteger(v)) return Math.round(v).toLocaleString("ru-RU");
       return v.toFixed(1).replace(".", ",");
     }

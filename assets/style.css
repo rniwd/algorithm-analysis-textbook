@@ -147,6 +147,11 @@ h2:hover .anchor, h3:hover .anchor, h4:hover .anchor, .anchor:focus { opacity: 1
   .tabs { margin-left: 0; width: 100%; justify-content: space-between; }
   .tabs a { padding: 0.35rem 0.45rem; font-size: 0.86rem; }
 }
+@media (max-width: 420px) {
+  .site-header .inner { padding: 0 8px; }
+  .tabs { gap: 0; }
+  .tabs a { padding: 0.3rem 0.32rem; font-size: 0.78rem; }
+}
 
 /* ---------- раскладка ---------- */
 .layout {
@@ -158,7 +163,7 @@ h2:hover .anchor, h3:hover .anchor, h4:hover .anchor, .anchor:focus { opacity: 1
   gap: 3rem;
 }
 .layout.single { grid-template-columns: minmax(0, 1fr); }
-main { min-width: 0; max-width: var(--measure); padding: 2.2rem 0 4rem; }
+main { min-width: 0; width: 100%; max-width: var(--measure); padding: 2.2rem 0 4rem; }
 .layout.single main { margin: 0 auto; }
 main.wide { max-width: 860px; }
 
@@ -412,7 +417,8 @@ details > .body > :last-child { margin-bottom: 0; }
 .quiz-score { font-weight: 600; }
 
 /* ---------- визуализации ---------- */
-.viz { margin: 1.5rem 0 2rem; }
+.viz { margin: 1.5rem 0 2rem; display: flex; flex-direction: column; }
+.viz > figcaption { order: 99; }
 .viz-stage {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -434,7 +440,7 @@ svg text { font-family: var(--font); fill: var(--fg); }
 svg .muted-text { fill: var(--muted); }
 
 .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; font-size: 0.86rem; color: var(--muted); }
-.legend label { display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; }
+.legend label { display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; white-space: nowrap; }
 
 /* Ханой */
 .hanoi-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1rem; }

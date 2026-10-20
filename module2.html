@@ -6,6 +6,7 @@
 <title>Модуль 2. Рекурсивные алгоритмы — Анализ алгоритмов</title>
 <meta name="description" content="Математический анализ рекурсивных алгоритмов: рекуррентные соотношения, обратные подстановки, индукция, факториал, Ханойская башня, BinRec, Фибоначчи, стек и хвостовая рекурсия.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="assets/style.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -351,19 +352,19 @@ for n in range(1, 21):
     hanoi(n, "A", "C", "B")
     print(n, moves, 2**n - 1, moves == 2**n - 1)</code></pre>
 <figure>
-<img src="assets/img/emp-hanoi.svg" alt="Ханойская башня: число ходов совпадает с 2^n − 1, логарифмическая шкала" loading="lazy">
+<img src="assets/img/emp-hanoi.svg" alt="Ханойская башня: число ходов совпадает с 2^n − 1, логарифмическая шкала">
 <figcaption>Ханойская башня, $n = 1..20$ (логарифмическая шкала): точки лежат на прямой $2^n - 1$. Модель стержней проверяла правила на каждом ходе; глубина рекурсии ровно $n$.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-fib.svg" alt="Фибоначчи: сложения наивной рекурсии F(n+1) − 1 и мемоизированной n − 1" loading="lazy">
+<img src="assets/img/emp-fib.svg" alt="Фибоначчи: сложения наивной рекурсии F(n+1) − 1 и мемоизированной n − 1">
 <figcaption>Фибоначчи: наивная рекурсия делает $F(n+1) - 1$ сложений (на логарифмической шкале — прямая, признак экспоненты), мемоизация — $n - 1$. Отношение $A(n)/A(n-1)$ при $n = 25$ равно $1{,}61804 \approx \varphi$.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-binrec.svg" alt="BinRec: число сложений равно floor(log2 n)" loading="lazy">
+<img src="assets/img/emp-binrec.svg" alt="BinRec: число сложений равно floor(log2 n)">
 <figcaption>BinRec: $A(n) = \lfloor\log_2 n\rfloor$ для всех $n$ от 1 до 5000; в степенях двойки ступенька касается кривой $\log_2 n$.</figcaption>
 </figure>
 <figure>
-<img src="assets/img/emp-fast-pow.svg" alt="Быстрое возведение в степень: число умножений между log2 n и 2 log2 n" loading="lazy">
+<img src="assets/img/emp-fast-pow.svg" alt="Быстрое возведение в степень: число умножений между log2 n и 2 log2 n">
 <figcaption>Power: все точки лежат между $\log_2 n$ и $2\log_2 n$; нижнюю границу дают степени двойки, верхнюю — числа вида $2^k - 1$.</figcaption>
 </figure>
 <p><strong>Выводы.</strong> Для факториала ($n$ умножений, глубина $n + 1$), Ханоя ($2^n - 1$ ходов и вызовов), BinRec ($\lfloor\log_2 n\rfloor$), Фибоначчи ($F(n+1) - 1$ и $n - 1$), MaxDC ($n - 1$ сравнений), Power ($\lfloor\log_2 n\rfloor + \nu(n) - 1$) и Sum ($n$) счётчик совпал с формулой при всех проверенных $n$. Опыт с <code>sum_acc</code> подтвердил, что Python не устраняет хвостовую рекурсию: при $n = 5000$ возникает <code>RecursionError</code>.</p>
