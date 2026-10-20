@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Глоссарий — Анализ алгоритмов</title>
+<meta name="description" content="Глоссарий ключевых терминов анализа эффективности алгоритмов.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="data/glossary.js"></script>
+<script>
+  // Страница глоссария строится из data/glossary.js (те же данные, что у подсказок)
+  window.App = window.App || {};
+  window.App.renderContent = function () {
+    var G = window.GLOSSARY, box = document.getElementById("terms"), nav = document.getElementById("letters");
+    var keys = Object.keys(G).sort(function (a, b) { return G[a].term.localeCompare(G[b].term, "ru"); });
+    var letters = {}, html = "";
+    keys.forEach(function (k) {
+      var g = G[k], L = g.term.charAt(0).toUpperCase();
+      var anchor = "";
+      if (!letters[L]) { letters[L] = k; anchor = ' data-letter="' + L + '"'; }
+      html += '<dt id="' + k + '"' + anchor + ">" + g.term + "</dt><dd>" + g.full +
+        (g.see ? ' <span class="see"><a href="' + g.see + '">→ где в учебнике</a></span>' : "") + "</dd>";
+    });
+    box.innerHTML = html;
+    nav.innerHTML = Object.keys(letters).map(function (L) { return '<a href="#' + letters[L] + '">' + L + "</a>"; }).join("");
+  };
+</script>
+<script defer src="assets/nav.js"></script>
+</head>
+<body data-page="glossary">
+<div class="layout single">
+<main>
+<p class="kicker">Справочник</p>
+<h1>Глоссарий</h1>
+<p class="lead">Ключевые термины в алфавитном порядке. Ссылка «где в учебнике» ведёт к разделу, где термин вводится.</p>
+<nav class="letter-nav" id="letters" aria-label="Буквы"></nav>
+<dl class="glossary" id="terms"></dl>
+</main>
+</div>
+</body>
+</html>

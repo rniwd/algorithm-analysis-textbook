@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Анализ эффективности алгоритмов — электронный учебник</title>
+<meta name="description" content="Электронный учебник для бакалавров: математический анализ нерекурсивных и рекурсивных алгоритмов по Левитину, §2.3–2.5.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="data/glossary.js"></script>
+<script defer src="assets/nav.js"></script>
+</head>
+<body data-page="index">
+<div class="layout single">
+<main class="wide">
+<section class="cover">
+<p class="kicker">Электронный учебник для бакалавров</p>
+<h1>Анализ эффективности алгоритмов</h1>
+<p class="lead">Как посчитать, сколько операций делает алгоритм с циклами или рекурсией, и получить точную формулу и класс эффективности. По книге А. Левитина «Introduction to the Design and Analysis of Algorithms», §2.3–2.5.</p>
+<div class="stats">
+<div><b>2</b>модуля и введение</div>
+<div><b>25</b>вопросов в квизах</div>
+<div><b>26</b>задач с решениями</div>
+<div><b>8</b>интерактивных моделей</div>
+</div>
+<p class="meta">Группа: Имя1, Имя2, Имя3 &nbsp;·&nbsp; Самостоятельная работа «E-Textbook on Algorithm Analysis»</p>
+</section>
+
+<h2 id="how">Как пользоваться</h2>
+<p>Читайте по порядку: введение → модуль 1 → модуль 2. Каждый модуль начинается с целей, затем идут теория и разборы примеров по общему плану, интерактивные модели, квиз и задачи трёх уровней. Заканчивается модуль резюме и шпаргалкой формул. Подчёркнутые пунктиром термины ведут в <a href="glossary.html">глоссарий</a>, при наведении показывается короткое определение. На любой раздел и любую задачу можно дать ссылку: значок # рядом с заголовком.</p>
+
+<h2 id="contents">Оглавление</h2>
+<ol class="toc-big">
+<li>
+<a class="t" href="intro.html">Введение: как измерять эффективность</a>
+<div class="d">Повторение основ перед модулями. Входной квиз из 5 вопросов.</div>
+<ul>
+<li><a href="intro.html#size">Размер входа</a></li>
+<li><a href="intro.html#basic-op">Базовая операция</a></li>
+<li><a href="intro.html#growth">Порядок роста</a></li>
+<li><a href="intro.html#notation">O, Ω, Θ</a></li>
+<li><a href="intro.html#cases">Худший, лучший, средний случаи</a></li>
+<li><a href="intro.html#entry-quiz">Входной квиз</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="module1.html">Модуль 1. Анализ нерекурсивных алгоритмов</a>
+<div class="d">Лекция 4, Левитин §2.3, 2.1, 2.6, Приложение A. Циклы превращаются в суммы.</div>
+<ul>
+<li><a href="module1.html#goals">Цели</a></li>
+<li><a href="module1.html#plan">План из 5 шагов</a></li>
+<li><a href="module1.html#sums">Суммы</a></li>
+<li><a href="module1.html#max-element">MaxElement</a></li>
+<li><a href="module1.html#unique">UniqueElements</a></li>
+<li><a href="module1.html#matrix">Матрицы</a></li>
+<li><a href="module1.html#dependent">Зависимая граница</a></li>
+<li><a href="module1.html#multiplicative">Мультипликативный цикл</a></li>
+<li><a href="module1.html#own-diagonal">Сумма над диагональю</a></li>
+<li><a href="module1.html#own-selection">Сортировка выбором</a></li>
+<li><a href="module1.html#average">Средний случай</a></li>
+<li><a href="module1.html#mistakes">Типичные ошибки</a></li>
+<li><a href="module1.html#growth">График роста</a></li>
+<li><a href="module1.html#empirical">Эмпирическая проверка</a></li>
+<li><a href="module1.html#quiz">Квиз</a></li>
+<li><a href="module1.html#tasks">Задачи</a></li>
+<li><a href="module1.html#cheatsheet">Шпаргалка</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="module2.html">Модуль 2. Анализ рекурсивных алгоритмов</a>
+<div class="d">Лекция 5, Левитин §2.4–2.5, Приложение B, §8.2. Рекурсия превращается в рекуррентное соотношение.</div>
+<ul>
+<li><a href="module2.html#goals">Цели</a></li>
+<li><a href="module2.html#plan">План и рекуррентности</a></li>
+<li><a href="module2.html#backward">Обратные подстановки</a></li>
+<li><a href="module2.html#induction">Индукция</a></li>
+<li><a href="module2.html#factorial">Факториал</a></li>
+<li><a href="module2.html#hanoi">Ханойская башня</a></li>
+<li><a href="module2.html#binrec">BinRec</a></li>
+<li><a href="module2.html#fibonacci">Фибоначчи</a></li>
+<li><a href="module2.html#recursion-vs-iteration">Рекурсия и итерация</a></li>
+<li><a href="module2.html#own-maxdc">Максимум пополам</a></li>
+<li><a href="module2.html#own-power">Быстрая степень</a></li>
+<li><a href="module2.html#empirical">Эмпирическая проверка</a></li>
+<li><a href="module2.html#quiz">Квиз</a></li>
+<li><a href="module2.html#tasks">Задачи</a></li>
+<li><a href="module2.html#cheatsheet">Шпаргалка</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="glossary.html">Глоссарий</a>
+<div class="d">Ключевые термины с определениями и ссылками на разделы.</div>
+</li>
+<li>
+<a class="t" href="sources.html">Источники</a>
+<div class="d">Литература, программный код для эмпирической части, использованные инструменты.</div>
+</li>
+</ol>
+</main>
+</div>
+</body>
+</html>

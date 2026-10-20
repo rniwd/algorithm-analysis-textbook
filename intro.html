@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Введение — Анализ алгоритмов</title>
+<meta name="description" content="Размер входа, базовая операция, порядок роста, нотации O, Ω, Θ, худший, лучший и средний случаи.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="data/glossary.js"></script>
+<script defer src="data/quizzes.js"></script>
+<script defer src="assets/quiz.js"></script>
+<script defer src="assets/nav.js"></script>
+</head>
+<body data-page="intro">
+<div class="layout">
+<nav class="toc" aria-label="Разделы страницы"></nav>
+<main>
+<p class="kicker">Введение</p>
+<h1>Как измерять эффективность алгоритма</h1>
+<p class="lead">Короткое повторение основ из §2.1–2.2 Левитина. Без него модули не читаются: всё дальнейшее — это подсчёт одной операции как функции от размера входа.</p>
+
+<h2 id="size">Размер входа</h2>
+<p>Почти любой алгоритм работает дольше на больших входах. Поэтому эффективность записывают как функцию от параметра $n$ — <a data-term="input-size">размера входа</a>.</p>
+<ul>
+<li>Сортировка, поиск, максимум массива: $n$ — число элементов.</li>
+<li>Перемножение матриц $n\times n$: обычно порядок $n$. Можно взять и число элементов $N = n^2$, но тогда тот же алгоритм получит другой класс (см. <a href="module1.html#m1-a3">задачу A3</a>).</li>
+<li>Вход — одно число $n$ (проверка простоты): размер — число битов
+$$b = \lfloor \log_2 n \rfloor + 1.$$
+Значение $n$ при этом растёт экспоненциально от $b$.</li>
+</ul>
+<p>Иногда параметров несколько: у графа — число вершин и число рёбер.</p>
+
+<h2 id="basic-op">Базовая операция</h2>
+<p>Считать время в секундах неудобно: оно зависит от компьютера, компилятора и качества программы. Вместо этого выбирают <a data-term="basic-operation">базовую операцию</a> — ту, что вносит наибольший вклад во время работы, — и считают, сколько раз она выполняется. Обычно это самая затратная операция во внутреннем цикле: сравнение ключей при сортировке и поиске, умножение в матричных алгоритмах.</p>
+<p>Если $c_{op}$ — время одной базовой операции, а $C(n)$ — число её выполнений, то</p>
+$$T(n) \approx c_{op}\, C(n).$$
+<p>Формула приближённая, но позволяет отвечать на вопросы об отношениях. Пусть $C(n) = \tfrac12 n(n-1)$. Во сколько раз дольше алгоритм будет работать на вдвое большем входе?</p>
+$$\frac{T(2n)}{T(n)} \approx \frac{c_{op}\cdot\tfrac12(2n)^2}{c_{op}\cdot\tfrac12 n^2} = 4.$$
+<p>И $c_{op}$, и множитель $\tfrac12$ сократились. Поэтому анализ игнорирует постоянные множители и следит только за порядком роста.</p>
+
+<h2 id="growth">Порядок роста</h2>
+<p>На маленьких входах разница между алгоритмами почти не видна. Она проявляется при больших $n$, и определяет её <a data-term="order-of-growth">порядок роста</a> функции $C(n)$.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="num">$n$</th><th class="num">$\log_2 n$</th><th class="num">$n\log_2 n$</th><th class="num">$n^2$</th><th class="num">$n^3$</th><th class="num">$2^n$</th></tr></thead>
+<tbody>
+<tr><td class="num">$10$</td><td class="num">$3{,}3$</td><td class="num">$3{,}3\cdot10^1$</td><td class="num">$10^2$</td><td class="num">$10^3$</td><td class="num">$10^3$</td></tr>
+<tr><td class="num">$10^2$</td><td class="num">$6{,}6$</td><td class="num">$6{,}6\cdot10^2$</td><td class="num">$10^4$</td><td class="num">$10^6$</td><td class="num">$1{,}3\cdot10^{30}$</td></tr>
+<tr><td class="num">$10^3$</td><td class="num">$10$</td><td class="num">$1{,}0\cdot10^4$</td><td class="num">$10^6$</td><td class="num">$10^9$</td><td class="num"></td></tr>
+<tr><td class="num">$10^6$</td><td class="num">$20$</td><td class="num">$2{,}0\cdot10^7$</td><td class="num">$10^{12}$</td><td class="num">$10^{18}$</td><td class="num"></td></tr>
+</tbody>
+</table>
+</div>
+<p>Удобно запомнить, как функции реагируют на удвоение $n$: $\log_2 n$ растёт на 1, $n$ — вдвое, $n\log n$ — чуть больше чем вдвое, $n^2$ — вчетверо, $n^3$ — в 8 раз, а $2^n$ возводится в квадрат. Алгоритмы с экспоненциальным числом операций применимы только к очень маленьким входам. Интерактивный график — в <a href="module1.html#growth">модуле 1</a>.</p>
+<p>Основание логарифма на порядок роста не влияет: $\log_a n = \log_a b \cdot \log_b n$ отличается от $\log_b n$ постоянным множителем. Поэтому пишут просто $\log n$.</p>
+
+<h2 id="notation">Нотации O, Ω, Θ</h2>
+<p>Ниже $t(n)$ — число операций алгоритма, $g(n)$ — простая функция для сравнения, обе неотрицательны.</p>
+<div class="def">
+<p><strong>$O$ (сверху).</strong> $t(n) \in O(g(n))$, если существуют $c > 0$ и $n_0 \ge 0$ такие, что $t(n) \le c\,g(n)$ для всех $n \ge n_0$. Подробнее: <a data-term="big-o">O-нотация</a>.</p>
+<p><strong>$\Omega$ (снизу).</strong> $t(n) \in \Omega(g(n))$, если $t(n) \ge c\,g(n)$ для всех $n \ge n_0$ при некоторых $c > 0$, $n_0$. Подробнее: <a data-term="big-omega">Ω-нотация</a>.</p>
+<p><strong>$\Theta$ (точно).</strong> $t(n) \in \Theta(g(n))$, если $c_2\,g(n) \le t(n) \le c_1\,g(n)$ для всех $n \ge n_0$. Подробнее: <a data-term="big-theta">Θ-нотация</a>.</p>
+</div>
+<figure>
+<svg viewBox="0 0 520 200" role="img" aria-label="Функция t(n) зажата между c2·g(n) и c1·g(n) начиная с n0" style="max-width:520px;width:100%">
+  <line x1="40" y1="175" x2="505" y2="175" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="40" y1="175" x2="40" y2="12" stroke="var(--muted)" stroke-width="1"/>
+  <path d="M40,160 C180,140 330,80 500,22" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <path d="M40,170 C180,160 330,128 500,96" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <path d="M40,120 C80,175 120,110 160,150 C230,140 330,100 500,55" fill="none" stroke="var(--fg)" stroke-width="2"/>
+  <line x1="160" y1="175" x2="160" y2="20" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="160" y="192" text-anchor="middle" font-size="12" class="muted-text">n₀</text>
+  <text x="498" y="16" text-anchor="end" font-size="12">c₁·g(n)</text>
+  <text x="498" y="115" text-anchor="end" font-size="12">c₂·g(n)</text>
+  <text x="498" y="70" text-anchor="end" font-size="12">t(n)</text>
+  <text x="100" y="30" text-anchor="middle" font-size="11" class="muted-text">до n₀ — неважно</text>
+</svg>
+<figcaption>$t(n) \in \Theta(g(n))$: начиная с $n_0$ функция зажата между $c_2 g(n)$ и $c_1 g(n)$.</figcaption>
+</figure>
+<p>Пример доказательства по определению: $\tfrac12 n(n-1) \in \Theta(n^2)$. Сверху: $\tfrac12 n^2 - \tfrac12 n \le \tfrac12 n^2$ при $n \ge 0$. Снизу: при $n \ge 2$ имеем $\tfrac12 n \le \tfrac14 n^2$, поэтому $\tfrac12 n^2 - \tfrac12 n \ge \tfrac14 n^2$. Подходят $c_1 = \tfrac12$, $c_2 = \tfrac14$, $n_0 = 2$.</p>
+<p>На практике удобнее сравнивать через предел:</p>
+$$\lim_{n\to\infty}\frac{t(n)}{g(n)} = \begin{cases} 0 & t \text{ растёт медленнее: } t \in O(g),\\ c > 0 & \text{одинаковый порядок: } t \in \Theta(g),\\ \infty & t \text{ растёт быстрее: } t \in \Omega(g).\end{cases}$$
+<p>Если алгоритм состоит из двух частей, выполняемых друг за другом, общий порядок определяет худшая часть:</p>
+$$t_1 \in O(g_1),\ t_2 \in O(g_2) \ \Rightarrow\ t_1 + t_2 \in O(\max\{g_1, g_2\}).$$
+
+<h2 id="cases">Худший, лучший и средний случаи</h2>
+<p>У многих алгоритмов число операций зависит не только от $n$, но и от конкретного входа. Классический пример — последовательный поиск ключа $K$:</p>
+<pre class="pseudo">ALGORITHM SequentialSearch(A[0..n − 1], K)
+//Ищет K в массиве; возвращает индекс первого совпадения или −1
+i ← 0
+while i < n and A[i] ≠ K do
+    i ← i + 1
+if i < n return i
+else return −1</pre>
+<ul>
+<li><a data-term="worst-case">Худший случай</a> — вход размера $n$, на котором операций больше всего. Здесь ключа нет или он последний: $C_{worst}(n) = n$. Оценка худшего случая — гарантия: больше $n$ сравнений не будет никогда.</li>
+<li><a data-term="best-case">Лучший случай</a> — вход размера $n$, на котором операций меньше всего. Здесь ключ первый: $C_{best}(n) = 1$. Лучший случай — это <strong>не маленький вход</strong>: размер $n$ зафиксирован, выбирается только содержимое.</li>
+<li><a data-term="average-case">Средний случай</a> — ожидаемое число операций на «случайном» входе. Для него нужны явные вероятностные допущения. Он <strong>не равен</strong> среднему арифметическому худшего и лучшего. Полный вывод для последовательного поиска — в <a href="module1.html#average">модуле 1</a>.</li>
+</ul>
+<p>Если число операций одинаково для всех входов размера $n$ (как у поиска максимума), три случая совпадают, и их не различают.</p>
+
+<h2 id="next">Что дальше</h2>
+<p><a href="module1.html">Модуль 1</a> учит считать операции в алгоритмах с циклами: число операций записывается суммой. <a href="module2.html">Модуль 2</a> — алгоритмы с рекурсией: число операций записывается рекуррентным соотношением. В обоих модулях используется один и тот же план из пяти шагов.</p>
+
+<h2 id="entry-quiz">Входной квиз</h2>
+<p>Пять вопросов о том, что нужно знать перед модулями. После выбора варианта появляются объяснения ко всем вариантам.</p>
+<div data-quiz="intro" class="quiz"></div>
+</main>
+</div>
+</body>
+</html>

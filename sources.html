@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Источники — Анализ алгоритмов</title>
+<meta name="description" content="Список литературы, программный код эмпирической части и использованные инструменты.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="data/glossary.js"></script>
+<script defer src="assets/nav.js"></script>
+</head>
+<body data-page="sources">
+<div class="layout single">
+<main>
+<p class="kicker">Справочник</p>
+<h1>Источники</h1>
+
+<h2 id="literature">Литература</h2>
+<ol>
+<li>Levitin A. <em>Introduction to the Design and Analysis of Algorithms</em>, 3rd ed. Pearson, 2012. Разделы 2.1–2.6, 8.2 (memory functions), Приложения A и B. <strong>Основной источник:</strong> все определения, формулы и обозначения учебника согласованы с этой книгой.</li>
+<li>Cormen T. H., Leiserson C. E., Rivest R. L., Stein C. <em>Introduction to Algorithms</em>, 4th ed. MIT Press, 2022. Главы 3, 4, Приложение A; задачи главы 7 о глубине стека и устранении хвостовой рекурсии.</li>
+<li>Sedgewick R., Wayne K. <em>Algorithms</em>, 4th ed. Addison-Wesley, 2011. Раздел 1.4 (эмпирический анализ, тест удвоения).</li>
+<li>Kleinberg J., Tardos É. <em>Algorithm Design</em>. Pearson, 2005. Главы 2, 5.</li>
+<li>Graham R. L., Knuth D. E., Patashnik O. <em>Concrete Mathematics</em>, 2nd ed. Addison-Wesley, 1994. Главы 1, 2, 7 (суммы, рекуррентности, Ханойская башня).</li>
+<li>Лекция 4. Математический анализ нерекурсивных алгоритмов (материалы курса).</li>
+<li>Лекция 5. Математический анализ рекурсивных алгоритмов (материалы курса).</li>
+</ol>
+
+<h2 id="code">Программный код</h2>
+<p>Эмпирическая часть написана на Python и лежит в папке <code>code/</code> репозитория <a href="https://github.com/rniwd/algorithm-analysis-textbook/tree/main/code">github.com/rniwd/algorithm-analysis-textbook</a>. Для запуска нужен Python 3 и matplotlib:</p>
+<pre><code>python3 -m pip install matplotlib
+cd code
+python3 run_all.py            # все скрипты со счётчиками
+python3 verify_answers.py     # проверка всех числовых ответов задач и квизов</code></pre>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Файл</th><th>Что проверяет</th></tr></thead>
+<tbody>
+<tr><td><code>m1_max_element.py</code></td><td>MaxElement: $C(n) = n - 1$</td></tr>
+<tr><td><code>m1_unique_elements.py</code></td><td>UniqueElements: оба худших входа $\frac{n(n-1)}{2}$, лучший $1$</td></tr>
+<tr><td><code>m1_matrix.py</code></td><td>матрицы: $M(n) = A(n) = n^3$</td></tr>
+<tr><td><code>m1_binary.py</code></td><td>Binary: $\lfloor\log_2 n\rfloor + 1$; цикл $i \leftarrow 2i$</td></tr>
+<tr><td><code>m1_sequential_search.py</code></td><td>средний случай $\frac{p(n+1)}{2} + n(1-p)$</td></tr>
+<tr><td><code>m1_selection_sort.py</code>, <code>m1_upper_sum.py</code>, <code>m1_dependent_loops.py</code></td><td>свои примеры модуля 1 и циклы с зависимой границей</td></tr>
+<tr><td><code>m2_factorial.py</code>, <code>m2_hanoi.py</code>, <code>m2_binrec.py</code>, <code>m2_fibonacci.py</code></td><td>разборы модуля 2</td></tr>
+<tr><td><code>m2_rec_max.py</code>, <code>m2_fast_pow.py</code>, <code>m2_rec_sum.py</code></td><td>свои примеры модуля 2, лимит рекурсии в Python</td></tr>
+<tr><td><code>tasks/m1_e1_triple_loop.py</code>, <code>tasks/m2_e1_split.py</code></td><td>решения эмпирических задач</td></tr>
+<tr><td><code>verify_answers.py</code></td><td>все числовые ответы задач и квизов сайта</td></tr>
+</tbody>
+</table>
+</div>
+<p>Графики из этих скриптов показаны в разделах эмпирической проверки <a href="module1.html#empirical">модуля 1</a> и <a href="module2.html#empirical">модуля 2</a>.</p>
+
+<h2 id="tools">Инструменты</h2>
+<ul>
+<li>Формулы набраны с помощью <a href="https://katex.org">KaTeX</a>, подсветка кода — <a href="https://highlightjs.org">highlight.js</a>. Визуализации написаны на чистом JavaScript и SVG без библиотек.</li>
+<li>Графики эмпирической части построены в matplotlib.</li>
+<li>Сайт статический, работает на GitHub Pages и при открытии <code>index.html</code> с диска; прогресс квизов хранится только в вашем браузере.</li>
+</ul>
+
+<h2 id="ai">Использование ИИ</h2>
+<p>При подготовке учебника использовался ассистент Claude Code: черновики текста, псевдокода, задач, визуализаций и скриптов. Все определения и формулы сверены с книгой Левитина. Числовые ответы проверены программой <code>verify_answers.py</code>, решения проверены участниками группы вручную. Подробности — в отчёте группы.</p>
+</main>
+</div>
+</body>
+</html>
