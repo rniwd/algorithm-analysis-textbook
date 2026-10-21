@@ -2,8 +2,9 @@
 (function () {
   "use strict";
 
-  var EN = document.documentElement.lang === "en";
-  function T(ru, en) { return EN ? en : ru; }
+  var LANG = document.documentElement.lang, EN = LANG === "en", KK = LANG === "kk";
+  // перевод строки интерфейса; казахские строки берутся из assets/i18n-kk.js по русскому ключу
+  function T(ru, en) { return EN ? en : KK ? ((window.I18N_KK || {})[ru] || ru) : ru; }
   var PAGES = [
     { id: "intro", href: "intro.html", title: T("Введение", "Introduction") },
     { id: "module1", href: "module1.html", title: T("Модуль 1", "Module 1") },
@@ -29,8 +30,14 @@
       html += '<a href="' + p.href + '"' + (p.id === page ? ' aria-current="page"' : "") + ">" + p.title + "</a>";
     });
     var file = location.pathname.split("/").pop() || "index.html";
-    var other = (EN ? "../" : "en/") + file + location.hash;
-    html += '</nav><a class="lang-switch" href="' + other + '" hreflang="' + (EN ? "ru" : "en") + '" title="' + T("English version", "Русская версия") + '">' + T("EN", "RU") + "</a></div>";
+    var root = LANG === "ru" ? "" : "../";
+    var langs = [["ru", "RU", "", "Русская версия"], ["kk", "ҚАЗ", "kk/", "Қазақша нұсқа"], ["en", "EN", "en/", "English version"]];
+    html += '</nav><div class="lang-switch" role="group" aria-label="Язык / Тіл / Language">';
+    langs.forEach(function (l) {
+      if (l[0] === LANG) html += '<span aria-current="true">' + l[1] + "</span>";
+      else html += '<a href="' + root + l[2] + file + location.hash + '" hreflang="' + l[0] + '" lang="' + l[0] + '" title="' + l[3] + '">' + l[1] + "</a>";
+    });
+    html += "</div></div>";
     header.innerHTML = html;
     document.body.insertBefore(header, document.body.firstChild);
   }
@@ -57,7 +64,7 @@
   }
 
   function slug(s) {
-    return s.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 60);
+    return s.toLowerCase().replace(/[^a-zа-яёәғқңөұүһі0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 60);
   }
 
   function addAnchors() {

@@ -104,7 +104,7 @@
       html("td", null, tr, String(r));
       html("td", null, tr, r === 1 ? T("1 (начальное условие)", "1 (initial condition)") : "2·" + mp + " + 1 = " + m);
       html("td", null, tr, String(m));
-      html("td", null, tr, r === 1 ? "—" : (m / mp).toFixed(3));
+      html("td", null, tr, r === 1 ? "—" : V.num(m / mp, 3));
       rows.push(tr);
     }
     var tableCtl = html("div", { class: "viz-controls" }, root);

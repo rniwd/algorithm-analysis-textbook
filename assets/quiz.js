@@ -2,8 +2,8 @@
 (function () {
   "use strict";
 
-  var EN = document.documentElement.lang === "en";
-  function T(ru, en) { return EN ? en : ru; }
+  var LANG = document.documentElement.lang, EN = LANG === "en", KK = LANG === "kk";
+  function T(ru, en) { return EN ? en : KK ? ((window.I18N_KK || {})[ru] || ru) : ru; }
   var LEVEL_NAMES = { A: "A", B: "B", C: "C", F: T("Найди ошибку", "Find the mistake"), E: T("Эмпирическая", "Empirical") };
 
   function store(key, value) {
@@ -21,7 +21,7 @@
     var key = box.getAttribute("data-quiz");
     var quiz = (window.QUIZ || {})[key];
     if (!quiz) { box.textContent = T("Квиз не найден: ", "Quiz not found: ") + key; return; }
-    var skey = "quiz:" + (EN ? "en:" : "") + key;
+    var skey = "quiz:" + (LANG === "ru" ? "" : LANG + ":") + key;
     var state = store(skey) || {};
     var total = quiz.length;
 

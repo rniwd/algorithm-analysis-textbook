@@ -209,7 +209,7 @@
     }
     function fmt(v) {
       if (v >= 1e6) { var e = Math.floor(Math.log10(v)); return V.num(v / Math.pow(10, e), 1) + "·10" + supNum(e); }
-      if (v >= 100 || Number.isInteger(v)) return Math.round(v).toLocaleString(V.EN ? "en-US" : "ru-RU");
+      if (v >= 100 || Number.isInteger(v)) return Math.round(v).toLocaleString(V.EN ? "en-US" : V.LANG === "kk" ? "kk-KZ" : "ru-RU");
       return V.num(v, 1);
     }
     function supNum(e) { return String(e).split("").map(function (c) { return "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]; }).join(""); }

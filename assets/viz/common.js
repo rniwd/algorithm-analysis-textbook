@@ -2,9 +2,9 @@
 (function () {
   "use strict";
   var NS = "http://www.w3.org/2000/svg";
-  var EN = document.documentElement.lang === "en";
-  // перевод строки интерфейса: T("рус", "eng")
-  function T(ru, en) { return EN ? en : ru; }
+  var LANG = document.documentElement.lang, EN = LANG === "en", KK = LANG === "kk";
+  // перевод строки интерфейса: T("рус", "eng"); казахские строки — из assets/i18n-kk.js по русскому ключу
+  function T(ru, en) { return EN ? en : KK ? ((window.I18N_KK || {})[ru] || ru) : ru; }
 
   function svg(tag, attrs, parent) {
     var el = document.createElementNS(NS, tag);
@@ -98,5 +98,5 @@
     else fn();
   }
 
-  window.Viz = { T: T, EN: EN, num: function (x, d) { var s = x.toFixed(d); return EN ? s : s.replace(".", ","); }, svg: svg, html: html, css: css, Player: Player, floorLog2: floorLog2, onReady: onReady };
+  window.Viz = { T: T, EN: EN, LANG: LANG, num: function (x, d) { var s = x.toFixed(d); return EN ? s : s.replace(".", ","); }, svg: svg, html: html, css: css, Player: Player, floorLog2: floorLog2, onReady: onReady };
 })();

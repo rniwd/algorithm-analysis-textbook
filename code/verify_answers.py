@@ -625,10 +625,12 @@ def main():
         print("FAIL недостаточно заданий")
     print()
 
-    # Английская версия: те же проверки, та же структура, те же ответы
-    en_dir = DATA / "en"
-    if en_dir.is_dir():
-        print("Английская версия (data/en)")
+    # Английская и казахская версии: те же проверки, та же структура, те же ответы
+    for code, title in (("en", "Английская версия"), ("kk", "Казахская версия")):
+        en_dir = DATA / code
+        if not en_dir.is_dir():
+            continue
+        print(f"{title} (data/{code})")
         print("-" * 72)
         en_checks = load_checks(en_dir)
         ru_map = {(f, q): lst for f, q, lst in checks}
@@ -643,7 +645,7 @@ def main():
                     print(f"FAIL {fname} {qid} {msg}")
         if len(en_checks) != len(checks):
             failed += 1
-            print(f"FAIL число проверок: en {len(en_checks)}, ru {len(checks)}")
+            print(f"FAIL число проверок: {code} {len(en_checks)}, ru {len(checks)}")
         en_errors, en_stats = structure(en_dir)
         for e in en_errors:
             print("FAIL", e)

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3AM — алгоритмдерді талдау бойынша электрондық оқулық</title>
+<meta name="description" content="Бакалаврларға арналған электрондық оқулық: Левитин бойынша рекурсивті емес және рекурсивті алгоритмдерді математикалық талдау, §2.3–2.5.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/i18n-kk.js"></script>
+<script defer src="../data/kk/glossary.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="index">
+<div class="layout single">
+<main class="wide">
+<section class="cover">
+<p class="kicker">3AM · бакалаврларға арналған электрондық оқулық</p>
+<h1>Алгоритмдердің тиімділігін талдау</h1>
+<p class="lead">Циклдары немесе рекурсиясы бар алгоритм қанша операция орындайтынын қалай есептеуге және нақты формула мен тиімділік класын қалай алуға болады. А. Левитиннің «Introduction to the Design and Analysis of Algorithms» кітабы бойынша, §2.3–2.5.</p>
+<div class="stats">
+<div><b>2</b>модуль және кіріспе</div>
+<div><b>25</b>тест сұрағы</div>
+<div><b>26</b>шешімі бар есеп</div>
+<div><b>8</b>интерактивті модель</div>
+</div>
+<p class="meta">Авторлар: Калжан Ақниет, Кеңес Маржан, Абильмажитова Алина, Алтыбаева Аружан &nbsp;·&nbsp; «E-Textbook on Algorithm Analysis» өзіндік жұмысы</p>
+</section>
+
+<h2 id="how">Қалай пайдалану керек</h2>
+<p>Ретімен оқыңыз: кіріспе → Модуль 1 → Модуль 2. Әр модуль мақсаттардан басталады, одан кейін теория және жалпы жоспар бойынша талданған мысалдар, интерактивті модельдер, тест және үш деңгейлі есептер келеді. Модуль қорытындымен және формулалар анықтамалығымен аяқталады. Пунктирмен астын сызылған терминдер <a href="glossary.html">глоссарийге</a> апарады, меңзерді апарғанда қысқа анықтама көрсетіледі. Кез келген бөлімге және кез келген есепке сілтеме беруге болады: тақырыптың жанындағы # белгісін пайдаланыңыз.</p>
+
+<h2 id="contents">Мазмұны</h2>
+<ol class="toc-big">
+<li>
+<a class="t" href="intro.html">Кіріспе: тиімділікті қалай өлшейміз</a>
+<div class="d">Модульдер алдында негіздерді қайталау. 5 сұрақтан тұратын кіріс тесті.</div>
+<ul>
+<li><a href="intro.html#size">Кіріс өлшемі</a></li>
+<li><a href="intro.html#basic-op">Негізгі операция</a></li>
+<li><a href="intro.html#growth">Өсу реті</a></li>
+<li><a href="intro.html#notation">O, Ω, Θ</a></li>
+<li><a href="intro.html#cases">Ең нашар, ең жақсы, орташа жағдайлар</a></li>
+<li><a href="intro.html#entry-quiz">Кіріс тесті</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="module1.html">Модуль 1. Рекурсивті емес алгоритмдерді талдау</a>
+<div class="d">4-дәріс, Левитин §2.3, 2.1, 2.6, A қосымшасы. Циклдар қосындыларға айналады.</div>
+<ul>
+<li><a href="module1.html#goals">Мақсаттар</a></li>
+<li><a href="module1.html#plan">5 қадамнан тұратын жоспар</a></li>
+<li><a href="module1.html#sums">Қосындылар</a></li>
+<li><a href="module1.html#max-element">MaxElement</a></li>
+<li><a href="module1.html#unique">UniqueElements</a></li>
+<li><a href="module1.html#matrix">Матрицалар</a></li>
+<li><a href="module1.html#dependent">Тәуелді шекара</a></li>
+<li><a href="module1.html#multiplicative">Мультипликативті цикл</a></li>
+<li><a href="module1.html#own-diagonal">Диагональдан жоғары қосынды</a></li>
+<li><a href="module1.html#own-selection">Таңдау арқылы сұрыптау</a></li>
+<li><a href="module1.html#average">Орташа жағдай</a></li>
+<li><a href="module1.html#mistakes">Жиі кездесетін қателер</a></li>
+<li><a href="module1.html#growth">Өсу графигі</a></li>
+<li><a href="module1.html#empirical">Эмпирикалық тексеру</a></li>
+<li><a href="module1.html#quiz">Тест</a></li>
+<li><a href="module1.html#tasks">Есептер</a></li>
+<li><a href="module1.html#cheatsheet">Анықтамалық парақ</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="module2.html">Модуль 2. Рекурсивті алгоритмдерді талдау</a>
+<div class="d">5-дәріс, Левитин §2.4–2.5, B қосымшасы, §8.2. Рекурсия рекуррентті қатынасқа айналады.</div>
+<ul>
+<li><a href="module2.html#goals">Мақсаттар</a></li>
+<li><a href="module2.html#plan">Жоспар және рекуррентті қатынастар</a></li>
+<li><a href="module2.html#backward">Кері алмастырулар</a></li>
+<li><a href="module2.html#induction">Индукция</a></li>
+<li><a href="module2.html#factorial">Факториал</a></li>
+<li><a href="module2.html#hanoi">Ханой мұнарасы</a></li>
+<li><a href="module2.html#binrec">BinRec</a></li>
+<li><a href="module2.html#fibonacci">Фибоначчи</a></li>
+<li><a href="module2.html#recursion-vs-iteration">Рекурсия және итерация</a></li>
+<li><a href="module2.html#own-maxdc">Екіге бөлу арқылы максимум</a></li>
+<li><a href="module2.html#own-power">Жылдам дәрежеге шығару</a></li>
+<li><a href="module2.html#empirical">Эмпирикалық тексеру</a></li>
+<li><a href="module2.html#quiz">Тест</a></li>
+<li><a href="module2.html#tasks">Есептер</a></li>
+<li><a href="module2.html#cheatsheet">Анықтамалық парақ</a></li>
+</ul>
+</li>
+<li>
+<a class="t" href="glossary.html">Глоссарий</a>
+<div class="d">Анықтамалары мен бөлімдерге сілтемелері бар негізгі терминдер.</div>
+</li>
+<li>
+<a class="t" href="sources.html">Дереккөздер</a>
+<div class="d">Әдебиеттер, эмпирикалық бөлімге арналған бағдарламалық код, пайдаланылған құралдар.</div>
+</li>
+</ol>
+</main>
+</div>
+</body>
+</html>

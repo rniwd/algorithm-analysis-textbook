@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дереккөздер — 3AM</title>
+<meta name="description" content="Әдебиеттер тізімі, эмпирикалық бөлімнің бағдарламалық коды және пайдаланылған құралдар.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/i18n-kk.js"></script>
+<script defer src="../data/kk/glossary.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="sources">
+<div class="layout single">
+<main>
+<p class="kicker">Анықтамалық</p>
+<h1>Дереккөздер</h1>
+
+<h2 id="literature">Әдебиеттер</h2>
+<ol>
+<li>Levitin A. <em>Introduction to the Design and Analysis of Algorithms</em>, 3rd ed. Pearson, 2012. 2.1–2.6, 8.2 (memory functions) бөлімдері, A және B қосымшалары. <strong>Негізгі дереккөз:</strong> оқулықтағы барлық анықтамалар, формулалар мен белгілеулер осы кітаппен келісілген.</li>
+<li>Cormen T. H., Leiserson C. E., Rivest R. L., Stein C. <em>Introduction to Algorithms</em>, 4th ed. MIT Press, 2022. 3, 4-тараулар, A қосымшасы; 7-тараудағы стек тереңдігі және құйрықты рекурсияны жою туралы есептер.</li>
+<li>Sedgewick R., Wayne K. <em>Algorithms</em>, 4th ed. Addison-Wesley, 2011. 1.4-бөлім (эмпирикалық талдау, екі еселеу тесті).</li>
+<li>Kleinberg J., Tardos É. <em>Algorithm Design</em>. Pearson, 2005. 2, 5-тараулар.</li>
+<li>Graham R. L., Knuth D. E., Patashnik O. <em>Concrete Mathematics</em>, 2nd ed. Addison-Wesley, 1994. 1, 2, 7-тараулар (қосындылар, рекуррентті қатынастар, Ханой мұнарасы).</li>
+<li>4-дәріс. Рекурсивті емес алгоритмдерді математикалық талдау (курс материалдары).</li>
+<li>5-дәріс. Рекурсивті алгоритмдерді математикалық талдау (курс материалдары).</li>
+</ol>
+
+<h2 id="code">Бағдарламалық код</h2>
+<p>Эмпирикалық бөлім Python тілінде жазылған және <a href="https://github.com/rniwd/algorithm-analysis-textbook/tree/main/code">github.com/rniwd/algorithm-analysis-textbook</a> репозиторийінің <code>code/</code> қалтасында орналасқан. Іске қосу үшін Python 3 және matplotlib қажет:</p>
+<pre><code>python3 -m pip install matplotlib
+cd code
+python3 run_all.py            # санауыштары бар барлық скрипттер
+python3 verify_answers.py     # есептер мен тесттердің барлық сандық жауаптарын тексеру</code></pre>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Файл</th><th>Нені тексереді</th></tr></thead>
+<tbody>
+<tr><td><code>m1_max_element.py</code></td><td>MaxElement: $C(n) = n - 1$</td></tr>
+<tr><td><code>m1_unique_elements.py</code></td><td>UniqueElements: ең нашар жағдайдың екі кірісі де $\frac{n(n-1)}{2}$, ең жақсы жағдай $1$</td></tr>
+<tr><td><code>m1_matrix.py</code></td><td>матрицалар: $M(n) = A(n) = n^3$</td></tr>
+<tr><td><code>m1_binary.py</code></td><td>Binary: $\lfloor\log_2 n\rfloor + 1$; $i \leftarrow 2i$ циклы</td></tr>
+<tr><td><code>m1_sequential_search.py</code></td><td>орташа жағдай $\frac{p(n+1)}{2} + n(1-p)$</td></tr>
+<tr><td><code>m1_selection_sort.py</code>, <code>m1_upper_sum.py</code>, <code>m1_dependent_loops.py</code></td><td>1-модульдің өз мысалдары және тәуелді шекарасы бар циклдар</td></tr>
+<tr><td><code>m2_factorial.py</code>, <code>m2_hanoi.py</code>, <code>m2_binrec.py</code>, <code>m2_fibonacci.py</code></td><td>2-модульдің талданған мысалдары</td></tr>
+<tr><td><code>m2_rec_max.py</code>, <code>m2_fast_pow.py</code>, <code>m2_rec_sum.py</code></td><td>2-модульдің өз мысалдары, Python-дағы рекурсия шегі</td></tr>
+<tr><td><code>tasks/m1_e1_triple_loop.py</code>, <code>tasks/m2_e1_split.py</code></td><td>эмпирикалық есептердің шешімдері</td></tr>
+<tr><td><code>verify_answers.py</code></td><td>сайттағы есептер мен тесттердің барлық сандық жауаптары</td></tr>
+</tbody>
+</table>
+</div>
+<p>Осы скрипттер салған графиктер <a href="module1.html#empirical">Модуль 1</a> және <a href="module2.html#empirical">Модуль 2</a> эмпирикалық тексеру бөлімдерінде көрсетілген.</p>
+
+<h2 id="tools">Құралдар</h2>
+<ul>
+<li>Формулалар <a href="https://katex.org">KaTeX</a> көмегімен терілген, кодты бояп көрсету — <a href="https://highlightjs.org">highlight.js</a>. Визуализациялар кітапханаларсыз таза JavaScript пен SVG-де жазылған.</li>
+<li>Эмпирикалық бөлімнің графиктері matplotlib-те салынған.</li>
+<li>Сайт статикалық, GitHub Pages-те және <code>index.html</code> файлын дисктен ашқанда жұмыс істейді; тест прогресі тек сіздің браузеріңізде сақталады.</li>
+</ul>
+
+<h2 id="ai">ЖИ-ді пайдалану</h2>
+<p>Оқулықты дайындау кезінде Claude Code ассистенті пайдаланылды: мәтіннің, псевдокодтың, есептердің, визуализациялар мен скрипттердің жобалары. Барлық анықтамалар мен формулалар Левитин кітабымен салыстырылып тексерілді. Сандық жауаптар <code>verify_answers.py</code> бағдарламасымен тексерілді, шешімдерді топ мүшелері қолмен тексерді. Толығырақ — топтың есебінде.</p>
+</main>
+</div>
+</body>
+</html>

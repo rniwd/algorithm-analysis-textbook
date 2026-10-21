@@ -142,25 +142,35 @@ h2:hover .anchor, h3:hover .anchor, h4:hover .anchor, .anchor:focus { opacity: 1
 .tabs a:hover { color: var(--fg); background: var(--accent-soft); text-decoration: none; }
 .lang-switch {
   flex: none;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--muted);
+  display: flex;
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 0.2rem 0.45rem;
+  overflow: hidden;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
-.lang-switch:hover { color: var(--accent); border-color: var(--accent-mid); text-decoration: none; }
+.lang-switch a, .lang-switch span { padding: 0.2rem 0.4rem; color: var(--muted); }
+.lang-switch a + a, .lang-switch a + span, .lang-switch span + a { border-left: 1px solid var(--line); }
+.lang-switch span { color: var(--accent); background: var(--accent-soft); }
+.lang-switch a:hover { color: var(--accent); text-decoration: none; }
 .tabs a[aria-current="page"] { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
 
 @media (max-width: 720px) {
-  .brand { display: none; }
-  .tabs { margin-left: 0; width: 100%; justify-content: space-between; }
+  /* на телефоне шапка в две строки: 3AM и языки сверху, разделы снизу */
+  :root { --header-h: 80px; }
+  .site-header .inner { flex-wrap: wrap; align-content: center; row-gap: 0.2rem; }
+  .brand { order: 0; }
+  .lang-switch { order: 1; margin-left: auto; }
+  .tabs { order: 2; margin-left: 0; width: 100%; justify-content: space-between; }
   .tabs a { padding: 0.35rem 0.45rem; font-size: 0.86rem; }
 }
 @media (max-width: 420px) {
   .site-header .inner { padding: 0 8px; }
   .tabs { gap: 0; }
   .tabs a { padding: 0.3rem 0.32rem; font-size: 0.78rem; }
+}
+@media (max-width: 374px) {
+  .tabs a { padding: 0.3rem 0.2rem; font-size: 0.74rem; }
 }
 
 /* ---------- раскладка ---------- */
@@ -425,6 +435,8 @@ details > .body > :last-child { margin-bottom: 0; }
 .q.done .opt.chosen.wrong::after { content: "ваш ответ — неверно"; color: var(--bad); }
 html[lang="en"] .q.done .opt.right::after { content: "correct"; }
 html[lang="en"] .q.done .opt.chosen.wrong::after { content: "your answer — wrong"; }
+html[lang="kk"] .q.done .opt.right::after { content: "дұрыс"; }
+html[lang="kk"] .q.done .opt.chosen.wrong::after { content: "сіздің жауабыңыз — қате"; }
 .q.done .opt:hover { color: var(--fg); }
 .quiz-foot { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; padding-top: 0.6rem; border-top: 1px solid var(--line); }
 .quiz-score { font-weight: 600; }

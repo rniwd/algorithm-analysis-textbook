@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кіріспе — 3AM</title>
+<meta name="description" content="Кіріс өлшемі, негізгі операция, өсу реті, O, Ω, Θ белгілеулері, ең нашар, ең жақсы және орташа жағдайлар.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="../assets/i18n-kk.js"></script>
+<script defer src="../data/kk/glossary.js"></script>
+<script defer src="../data/kk/quizzes.js"></script>
+<script defer src="../assets/quiz.js"></script>
+<script defer src="../assets/nav.js"></script>
+</head>
+<body data-page="intro">
+<div class="layout">
+<nav class="toc" aria-label="Бет бөлімдері"></nav>
+<main>
+<p class="kicker">Кіріспе</p>
+<h1>Алгоритмнің тиімділігін қалай өлшеуге болады</h1>
+<p class="lead">Левитиннің §2.1–2.2 бөлімдеріндегі негіздерді қысқаша қайталау. Онсыз модульдерді түсіну қиын: әрі қарайғы барлық талдау — бір операцияның орындалу санын кіріс өлшемінің функциясы ретінде есептеу.</p>
+
+<h2 id="size">Кіріс өлшемі</h2>
+<p>Кез келген дерлік алгоритм үлкен кірістерде ұзағырақ жұмыс істейді. Сондықтан тиімділік $n$ параметрінің — <a data-term="input-size">кіріс өлшемінің</a> функциясы ретінде жазылады.</p>
+<ul>
+<li>Сұрыптау, іздеу, массивтің максимумы: $n$ — элементтер саны.</li>
+<li>$n\times n$ матрицаларын көбейту: әдетте матрицаның реті $n$. Элементтер санын $N = n^2$ деп алуға да болады, бірақ онда сол алгоритм басқа класқа жатады (<a href="module1.html#m1-a3">A3 есебін</a> қараңыз).</li>
+<li>Кіріс — бір ғана $n$ саны (жай санға тексеру): өлшемі — биттер саны
+$$b = \lfloor \log_2 n \rfloor + 1.$$
+Бұл жағдайда $n$ мәні $b$-ға қатысты экспоненциалды өседі.</li>
+</ul>
+<p>Кейде параметрлер бірнешеу болады: графта — төбелер саны және қабырғалар саны.</p>
+
+<h2 id="basic-op">Негізгі операция</h2>
+<p>Уақытты секундпен өлшеу ыңғайсыз: ол компьютерге, компиляторға және бағдарламаның сапасына тәуелді. Оның орнына <a data-term="basic-operation">негізгі операцияны</a> — жұмыс уақытына ең көп үлес қосатын операцияны — таңдап, оның қанша рет орындалатынын санайды. Әдетте бұл ішкі циклдағы ең қымбат операция: сұрыптау мен іздеудегі кілттерді салыстыру, матрицалық алгоритмдердегі көбейту.</p>
+<p>Егер $c_{op}$ — бір негізгі операцияның орындалу уақыты, ал $C(n)$ — оның орындалу саны болса, онда</p>
+$$T(n) \approx c_{op}\, C(n).$$
+<p>Формула жуық, бірақ қатынастар туралы сұрақтарға жауап беруге мүмкіндік береді. Үлкен $n$ үшін $C(n) = \tfrac12 n(n-1) \approx \tfrac12 n^2$ болсын. Екі есе үлкен кірісте алгоритм неше есе ұзақ жұмыс істейді?</p>
+$$\frac{T(2n)}{T(n)} \approx \frac{c_{op}\cdot\tfrac12(2n)^2}{c_{op}\cdot\tfrac12 n^2} = 4.$$
+<p>$c_{op}$ да, $\tfrac12$ көбейткіші де қысқарып кетті. Сондықтан талдау тұрақты көбейткіштерді ескермейді және тек өсу ретін қадағалайды.</p>
+
+<h2 id="growth">Өсу реті</h2>
+<p>Кіші кірістерде алгоритмдер арасындағы айырмашылық байқалмайды дерлік. Ол үлкен $n$ кезінде көрінеді және оны $C(n)$ функциясының <a data-term="order-of-growth">өсу реті</a> анықтайды.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="num">$n$</th><th class="num">$\log_2 n$</th><th class="num">$n\log_2 n$</th><th class="num">$n^2$</th><th class="num">$n^3$</th><th class="num">$2^n$</th></tr></thead>
+<tbody>
+<tr><td class="num">$10$</td><td class="num">$3{,}3$</td><td class="num">$3{,}3\cdot10^1$</td><td class="num">$10^2$</td><td class="num">$10^3$</td><td class="num">$10^3$</td></tr>
+<tr><td class="num">$10^2$</td><td class="num">$6{,}6$</td><td class="num">$6{,}6\cdot10^2$</td><td class="num">$10^4$</td><td class="num">$10^6$</td><td class="num">$1{,}3\cdot10^{30}$</td></tr>
+<tr><td class="num">$10^3$</td><td class="num">$10$</td><td class="num">$1{,}0\cdot10^4$</td><td class="num">$10^6$</td><td class="num">$10^9$</td><td class="num"></td></tr>
+<tr><td class="num">$10^6$</td><td class="num">$20$</td><td class="num">$2{,}0\cdot10^7$</td><td class="num">$10^{12}$</td><td class="num">$10^{18}$</td><td class="num"></td></tr>
+</tbody>
+</table>
+</div>
+<p>Функциялардың $n$ екі есе артқанда қалай өзгеретінін есте сақтаған ыңғайлы: $\log_2 n$ 1-ге артады, $n$ — екі есе, $n\log n$ — екі еседен сәл көп, $n^2$ — төрт есе, $n^3$ — 8 есе, ал $2^n$ квадратқа шығады. Операциялар саны экспоненциалды алгоритмдер тек өте кіші кірістерге ғана қолданылады. Интерактивті график <a href="module1.html#growth">Модуль 1</a>-де берілген.</p>
+<p>Логарифмнің негізі өсу ретіне әсер етпейді: $\log_a n = \log_a b \cdot \log_b n$ өрнегі $\log_b n$-нен тұрақты көбейткішке ғана ерекшеленеді. Сондықтан жай ғана $\log n$ деп жазады.</p>
+
+<h2 id="notation">O, Ω, Θ белгілеулері</h2>
+<p>Төменде $t(n)$ — алгоритмнің операциялар саны, $g(n)$ — салыстыруға арналған қарапайым функция, екеуі де теріс емес.</p>
+<div class="def">
+<p><strong>$O$ (жоғарыдан).</strong> Егер $c > 0$ және $n_0 \ge 0$ табылып, барлық $n \ge n_0$ үшін $t(n) \le c\,g(n)$ орындалса, онда $t(n) \in O(g(n))$. Толығырақ: <a data-term="big-o">O белгілеуі</a>.</p>
+<p><strong>$\Omega$ (төменнен).</strong> Егер қандай да бір $c > 0$, $n_0$ үшін барлық $n \ge n_0$ кезінде $t(n) \ge c\,g(n)$ орындалса, онда $t(n) \in \Omega(g(n))$. Толығырақ: <a data-term="big-omega">Ω белгілеуі</a>.</p>
+<p><strong>$\Theta$ (дәл).</strong> Егер барлық $n \ge n_0$ үшін $c_2\,g(n) \le t(n) \le c_1\,g(n)$ орындалса, онда $t(n) \in \Theta(g(n))$. Толығырақ: <a data-term="big-theta">Θ белгілеуі</a>.</p>
+</div>
+<figure>
+<svg viewBox="0 0 520 200" role="img" aria-label="n0-ден бастап t(n) функциясы c2·g(n) мен c1·g(n) арасында қысылған" style="max-width:520px;width:100%">
+  <line x1="40" y1="175" x2="505" y2="175" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="40" y1="175" x2="40" y2="12" stroke="var(--muted)" stroke-width="1"/>
+  <path d="M40,160 C180,140 330,80 500,22" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <path d="M40,170 C180,160 330,128 500,96" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <path d="M40,120 C80,175 120,110 160,150 C230,140 330,100 500,55" fill="none" stroke="var(--fg)" stroke-width="2"/>
+  <line x1="160" y1="175" x2="160" y2="20" stroke="var(--line)" stroke-width="1.5"/>
+  <text x="160" y="192" text-anchor="middle" font-size="12" class="muted-text">n₀</text>
+  <text x="498" y="16" text-anchor="end" font-size="12">c₁·g(n)</text>
+  <text x="498" y="115" text-anchor="end" font-size="12">c₂·g(n)</text>
+  <text x="498" y="70" text-anchor="end" font-size="12">t(n)</text>
+  <text x="100" y="30" text-anchor="middle" font-size="11" class="muted-text">n₀-ге дейін — маңызды емес</text>
+</svg>
+<figcaption>$t(n) \in \Theta(g(n))$: $n_0$-ден бастап функция $c_2 g(n)$ мен $c_1 g(n)$ арасында қысылған.</figcaption>
+</figure>
+<p>Шатастырмау үшін: $O$ — «жылдамырақ өспейді», $\Omega$ — «баяуырақ өспейді», $\Theta$ — «дәл солай өседі». $\Theta$ бір мезгілде $O$ мен $\Omega$ дегенді білдіреді. $t(n) = 3n^2 + 5$ үшін мысал:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th></th><th>$g(n) = n$</th><th>$g(n) = n^2$</th><th>$g(n) = n^3$</th></tr></thead>
+<tbody>
+<tr><td>$t \in O(g)$?</td><td>жоқ</td><td>иә</td><td>иә</td></tr>
+<tr><td>$t \in \Omega(g)$?</td><td>иә</td><td>иә</td><td>жоқ</td></tr>
+<tr><td>$t \in \Theta(g)$?</td><td>жоқ</td><td>иә</td><td>жоқ</td></tr>
+</tbody>
+</table>
+</div>
+<p>Сондықтан $3n^2 + 5 \in O(n^3)$ жазбасы дұрыс, бірақ аз ақпарат береді; дәл жауапты $\Theta(n^2)$ береді. Талдауларда біз дәл $\Theta$-ны іздейміз.</p>
+<p>Анықтама бойынша дәлелдеу мысалы: $\tfrac12 n(n-1) \in \Theta(n^2)$. Жоғарыдан: $n \ge 0$ кезінде $\tfrac12 n^2 - \tfrac12 n \le \tfrac12 n^2$. Төменнен: $n \ge 2$ кезінде $\tfrac12 n \le \tfrac14 n^2$, сондықтан $\tfrac12 n^2 - \tfrac12 n \ge \tfrac14 n^2$. $c_1 = \tfrac12$, $c_2 = \tfrac14$, $n_0 = 2$ мәндері жарайды.</p>
+<p>Іс жүзінде шек арқылы салыстырған ыңғайлырақ:</p>
+$$\lim_{n\to\infty}\frac{t(n)}{g(n)} = \begin{cases} 0 & t \text{ баяуырақ өседі: } t \in O(g),\\ c > 0 & \text{реті бірдей: } t \in \Theta(g),\\ \infty & t \text{ жылдамырақ өседі: } t \in \Omega(g).\end{cases}$$
+<p>Егер алгоритм бірінен кейін бірі орындалатын екі бөліктен тұрса, жалпы ретті нашарырақ бөлік анықтайды:</p>
+$$t_1 \in O(g_1),\ t_2 \in O(g_2) \ \Rightarrow\ t_1 + t_2 \in O(\max\{g_1, g_2\}).$$
+
+<h2 id="cases">Ең нашар, ең жақсы және орташа жағдайлар</h2>
+<p>Көптеген алгоритмдерде операциялар саны тек $n$-ге ғана емес, нақты кіріске де тәуелді. Классикалық мысал — $K$ кілтін сызықтық іздеу:</p>
+<pre class="pseudo">ALGORITHM SequentialSearch(A[0..n − 1], K)
+//Массивтен K-ны іздейді; бірінші сәйкестіктің индексін немесе −1 қайтарады
+i ← 0
+while i < n and A[i] ≠ K do
+    i ← i + 1
+if i < n return i
+else return −1</pre>
+<ul>
+<li><a data-term="worst-case">Ең нашар жағдай</a> — операциялар саны ең көп болатын $n$ өлшемді кіріс. Мұнда кілт жоқ немесе оның бірінші кездесуі соңғы позицияда тұр: $C_{worst}(n) = n$. Ең нашар жағдай бағасы — кепілдік: $n$-нен артық салыстыру ешқашан болмайды.</li>
+<li><a data-term="best-case">Ең жақсы жағдай</a> — операциялар саны ең аз болатын $n$ өлшемді кіріс. Мұнда кілт бірінші тұр: $C_{best}(n) = 1$. Ең жақсы жағдай — бұл <strong>кіші кіріс емес</strong>: $n$ өлшемі бекітілген, тек мазмұны ғана таңдалады.</li>
+<li><a data-term="average-case">Орташа жағдай</a> — «кездейсоқ» кірістегі операциялардың күтілетін саны. Ол үшін айқын ықтималдық болжамдары қажет. Ол ең нашар және ең жақсы жағдайлардың арифметикалық ортасына <strong>тең емес</strong>. Сызықтық іздеу үшін толық қорытып шығару <a href="module1.html#average">Модуль 1</a>-де берілген.</li>
+</ul>
+<p>Егер операциялар саны $n$ өлшемді барлық кірістер үшін бірдей болса (максимумды іздеудегідей), үш жағдай сәйкес келеді және оларды ажыратпайды.</p>
+
+<h2 id="next">Әрі қарай не бар</h2>
+<p><a href="module1.html">Модуль 1</a> циклдары бар алгоритмдерде операцияларды санауды үйретеді: операциялар саны қосынды түрінде жазылады. <a href="module2.html">Модуль 2</a> — рекурсиясы бар алгоритмдер: операциялар саны рекуррентті қатынас түрінде жазылады. Екі модульде де бес қадамнан тұратын бір жалпы жоспар қолданылады.</p>
+
+<h2 id="entry-quiz">Кіріс тесті</h2>
+<p>Модульдер алдында білу қажет нәрселер туралы бес сұрақ. Нұсқаны таңдағаннан кейін барлық нұсқаларға түсіндірмелер пайда болады.</p>
+<div data-quiz="intro" class="quiz"></div>
+</main>
+</div>
+</body>
+</html>
